@@ -1,0 +1,10 @@
+# Ce dépôt ne suit que les paquets du projet ; les dépôts Turtlebot voisins ont leur propre Git.
+/*
+!/.gitignore
+!/README.md
+!/agri_sim/
+!/vigie_detection/
+!/outils/
+__pycache__/
+*.pyc
+*.egg-info/

@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<sdf version="1.8">
+<model name="borne">
+<static>true</static>
+<link name="link"><collision name="c"><pose>0 0 0.35 0 0 0</pose><geometry><cylinder><radius>0.04</radius><length>0.7</length></cylinder></geometry></collision><visual name="poteau"><pose>0 0 0.35 0 0 0</pose><geometry><cylinder><radius>0.04</radius><length>0.7</length></cylinder></geometry><material><ambient>0.45 0.32 0.2 1</ambient><diffuse>0.55 0.4 0.25 1</diffuse></material></visual><visual name="tete"><pose>0 0 0.72 0 0 0</pose><geometry><box><size>0.1 0.1 0.08</size></box></geometry><material><ambient>0.75 0.15 0.4 1</ambient><diffuse>0.75 0.15 0.4 1</diffuse></material></visual></link>
+</model>
+</sdf>

@@ -1,0 +1,393 @@
+<?xml version="1.0"?>
+<sdf version="1.8">
+  <world name="default">
+    <physics name="1ms" type="ignored">
+      <max_step_size>0.004</max_step_size>
+      <real_time_factor>1.0</real_time_factor>
+    </physics>
+    <plugin filename="gz-sim-physics-system" name="gz::sim::systems::Physics"/>
+    <plugin filename="gz-sim-user-commands-system" name="gz::sim::systems::UserCommands"/>
+    <plugin filename="gz-sim-scene-broadcaster-system" name="gz::sim::systems::SceneBroadcaster"/>
+    <plugin filename="gz-sim-sensors-system" name="gz::sim::systems::Sensors">
+      <render_engine>ogre2</render_engine>
+    </plugin>
+    <plugin filename="gz-sim-imu-system" name="gz::sim::systems::Imu"/>
+
+    <scene>
+      <ambient>0.62 0.62 0.66 1</ambient>
+      <background>0.66 0.79 0.94 1</background>
+      <shadows>true</shadows>
+      <grid>false</grid>
+      <sky></sky>
+    </scene>
+
+    <light type="directional" name="soleil">
+      <cast_shadows>true</cast_shadows>
+      <pose>0 0 30 0 0 0</pose>
+      <diffuse>1.0 0.94 0.84 1</diffuse>
+      <specular>0.25 0.25 0.25 1</specular>
+      <direction>-0.5 0.38 -0.78</direction>
+      <intensity>1.2</intensity>
+    </light>
+    <light type="directional" name="ciel">
+      <cast_shadows>false</cast_shadows>
+      <pose>0 0 30 0 0 0</pose>
+      <diffuse>0.28 0.32 0.4 1</diffuse>
+      <specular>0 0 0 1</specular>
+      <direction>0.4 -0.3 -0.85</direction>
+    </light>
+
+    <include><uri>model://sol_etendu</uri><name>sol_etendu</name><pose>0 0 -0.04 0 0 0</pose></include>
+    <include><uri>model://exploitation_sol</uri><name>exploitation</name><pose>0.000 0.000 0.000 0 0 0.000</pose></include>
+    <include><uri>model://station_rover</uri><name>station_rover</name><pose>-6.900 0.300 0.000 0 0 0.000</pose></include>
+    <include><uri>model://aire_drone</uri><name>aire_drone</name><pose>-9.200 -2.200 0.020 0 0 0.000</pose></include>
+    <include><uri>model://hangar</uri><name>hangar</name><pose>-11.000 -8.400 0.020 0 0 3.142</pose></include>
+    <include><uri>model://borne</uri><name>borne_0</name><pose>-7.650 -3.850 0.000 0 0 0.000</pose></include>
+    <include><uri>model://borne</uri><name>borne_1</name><pose>-7.650 3.850 0.000 0 0 0.000</pose></include>
+    <include><uri>model://borne</uri><name>borne_2</name><pose>7.650 -3.850 0.000 0 0 0.000</pose></include>
+    <include><uri>model://borne</uri><name>borne_3</name><pose>7.650 3.850 0.000 0 0 0.000</pose></include>
+    <include><uri>model://haie</uri><name>haie_nord</name><pose>0.000 6.800 0.020 0 0 0.000</pose></include>
+    <include><uri>model://haie</uri><name>haie_est</name><pose>11.000 6.200 0.020 0 0 1.571</pose></include>
+    <include><uri>model://arbre_0</uri><name>arbre_0</name><pose>-12.500 4.500 0.000 0 0 2.034</pose></include>
+    <include><uri>model://arbre_1</uri><name>arbre_1</name><pose>-9.500 8.500 0.000 0 0 0.947</pose></include>
+    <include><uri>model://arbre_0</uri><name>arbre_2</name><pose>13.500 8.500 0.000 0 0 4.088</pose></include>
+    <include><uri>model://arbre_1</uri><name>arbre_3</name><pose>14.500 -6.500 0.000 0 0 0.455</pose></include>
+    <include><uri>model://arbre_1</uri><name>arbre_4</name><pose>5.000 10.500 0.000 0 0 3.365</pose></include>
+    <include><uri>model://arbre_0</uri><name>arbre_5</name><pose>-15.500 -2.000 0.000 0 0 2.297</pose></include>
+    <include><uri>model://arbre_0</uri><name>arbre_6</name><pose>8.500 -9.500 0.000 0 0 0.364</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_00_00</name><pose>-5.999 -3.023 0.045 0 0 1.511</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_00_01</name><pose>-5.596 -3.022 0.045 0 0 3.960</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_00_02</name><pose>-5.193 -3.022 0.045 0 0 6.131</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_00_03</name><pose>-4.836 -2.982 0.046 0 0 3.396</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_00_04</name><pose>-4.394 -2.997 0.046 0 0 3.652</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_00_05</name><pose>-3.989 -3.006 0.046 0 0 3.544</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_00_06</name><pose>-3.590 -3.000 0.046 0 0 2.924</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_00_07</name><pose>-3.166 -3.007 0.046 0 0 4.390</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_00_08</name><pose>-2.820 -2.996 0.046 0 0 4.581</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_00_09</name><pose>-2.417 -2.976 0.045 0 0 1.036</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_00_10</name><pose>-2.013 -2.978 0.045 0 0 4.802</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_00_11</name><pose>-1.594 -2.981 0.046 0 0 3.733</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_00_12</name><pose>-1.194 -3.002 0.046 0 0 2.977</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_00_13</name><pose>-0.787 -3.022 0.045 0 0 1.787</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_00_15</name><pose>-0.003 -3.017 0.046 0 0 1.370</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_00_16</name><pose>0.383 -2.988 0.046 0 0 0.506</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_00_17</name><pose>0.796 -2.998 0.046 0 0 5.426</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_00_18</name><pose>1.182 -3.004 0.046 0 0 6.015</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_00_19</name><pose>1.572 -3.016 0.046 0 0 0.076</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_00_20</name><pose>2.026 -3.016 0.046 0 0 2.631</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_00_21</name><pose>2.390 -2.997 0.046 0 0 2.868</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_00_22</name><pose>2.830 -2.977 0.045 0 0 2.500</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_00_23</name><pose>3.192 -3.001 0.046 0 0 0.423</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_00_24</name><pose>3.577 -3.017 0.046 0 0 0.643</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_00_25</name><pose>4.005 -2.998 0.046 0 0 0.442</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_00_26</name><pose>4.377 -3.006 0.046 0 0 3.782</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_00_27</name><pose>4.798 -3.019 0.045 0 0 3.017</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_00_28</name><pose>5.185 -3.018 0.046 0 0 3.006</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_00_29</name><pose>5.615 -2.999 0.046 0 0 0.921</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_00_30</name><pose>6.003 -3.024 0.045 0 0 4.372</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_01_00</name><pose>-6.019 -2.407 0.043 0 0 3.345</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_01_01</name><pose>-5.578 -2.409 0.046 0 0 5.062</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_01_02</name><pose>-5.175 -2.388 0.046 0 0 2.233</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_01_03</name><pose>-4.838 -2.424 0.045 0 0 1.216</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_01_04</name><pose>-4.392 -2.408 0.046 0 0 5.997</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_01_05</name><pose>-4.011 -2.414 0.046 0 0 2.121</pose></include>
+    <include><uri>model://betterave_debut_a</uri><name>b_01_06</name><pose>-3.601 -2.376 0.045 0 0 3.011</pose></include>
+    <include><uri>model://betterave_debut_a</uri><name>b_01_07</name><pose>-3.188 -2.385 0.046 0 0 5.713</pose></include>
+    <include><uri>model://betterave_debut_a</uri><name>b_01_08</name><pose>-2.777 -2.387 0.046 0 0 2.725</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_01_09</name><pose>-2.389 -2.421 0.045 0 0 2.909</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_01_10</name><pose>-1.981 -2.421 0.045 0 0 0.173</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_01_11</name><pose>-1.593 -2.402 0.046 0 0 4.128</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_01_12</name><pose>-1.212 -2.398 0.046 0 0 5.020</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_01_13</name><pose>-0.782 -2.420 0.045 0 0 2.724</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_01_14</name><pose>-0.370 -2.384 0.046 0 0 1.336</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_01_15</name><pose>0.000 -2.387 0.046 0 0 5.239</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_01_16</name><pose>0.365 -2.388 0.046 0 0 5.194</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_01_17</name><pose>0.830 -2.418 0.046 0 0 5.481</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_01_18</name><pose>1.222 -2.395 0.046 0 0 1.082</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_01_19</name><pose>1.598 -2.389 0.046 0 0 4.285</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_01_20</name><pose>2.002 -2.401 0.046 0 0 1.561</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_01_21</name><pose>2.382 -2.386 0.046 0 0 4.773</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_01_22</name><pose>2.833 -2.403 0.046 0 0 4.350</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_01_23</name><pose>3.196 -2.398 0.046 0 0 4.391</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_01_24</name><pose>3.630 -2.378 0.045 0 0 5.275</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_01_25</name><pose>3.971 -2.419 0.046 0 0 4.215</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_01_26</name><pose>4.394 -2.414 0.046 0 0 5.633</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_01_27</name><pose>4.772 -2.389 0.046 0 0 1.590</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_01_28</name><pose>5.171 -2.402 0.046 0 0 2.501</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_01_29</name><pose>5.599 -2.376 0.045 0 0 4.436</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_01_30</name><pose>6.040 -2.405 0.039 0 0 2.000</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_02_00</name><pose>-5.982 -1.824 0.045 0 0 4.416</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_02_01</name><pose>-5.609 -1.799 0.046 0 0 0.709</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_02_02</name><pose>-5.167 -1.814 0.046 0 0 1.668</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_02_03</name><pose>-4.837 -1.786 0.046 0 0 5.148</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_02_04</name><pose>-4.372 -1.791 0.046 0 0 0.938</pose></include>
+    <include><uri>model://betterave_debut_a</uri><name>b_02_05</name><pose>-3.966 -1.796 0.046 0 0 1.753</pose></include>
+    <include><uri>model://betterave_malade_b</uri><name>b_02_06</name><pose>-3.576 -1.816 0.046 0 0 5.893</pose></include>
+    <include><uri>model://betterave_malade_a</uri><name>b_02_07</name><pose>-3.189 -1.785 0.046 0 0 0.418</pose></include>
+    <include><uri>model://betterave_malade_b</uri><name>b_02_08</name><pose>-2.771 -1.802 0.046 0 0 5.819</pose></include>
+    <include><uri>model://betterave_debut_a</uri><name>b_02_09</name><pose>-2.419 -1.819 0.046 0 0 5.891</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_02_10</name><pose>-1.962 -1.812 0.046 0 0 3.948</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_02_11</name><pose>-1.598 -1.815 0.046 0 0 1.699</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_02_12</name><pose>-1.176 -1.775 0.045 0 0 4.604</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_02_13</name><pose>-0.796 -1.816 0.046 0 0 0.667</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_02_14</name><pose>-0.374 -1.803 0.046 0 0 6.094</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_02_15</name><pose>-0.015 -1.814 0.046 0 0 5.227</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_02_16</name><pose>0.417 -1.793 0.046 0 0 6.166</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_02_17</name><pose>0.827 -1.824 0.045 0 0 2.705</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_02_18</name><pose>1.164 -1.792 0.046 0 0 3.760</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_02_19</name><pose>1.615 -1.823 0.045 0 0 2.800</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_02_20</name><pose>1.981 -1.777 0.045 0 0 1.535</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_02_21</name><pose>2.437 -1.810 0.046 0 0 2.106</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_02_22</name><pose>2.767 -1.811 0.046 0 0 3.170</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_02_23</name><pose>3.160 -1.812 0.046 0 0 3.685</pose></include>
+    <include><uri>model://betterave_debut_a</uri><name>b_02_24</name><pose>3.592 -1.810 0.046 0 0 3.677</pose></include>
+    <include><uri>model://betterave_debut_b</uri><name>b_02_25</name><pose>4.002 -1.787 0.046 0 0 4.800</pose></include>
+    <include><uri>model://betterave_debut_a</uri><name>b_02_26</name><pose>4.418 -1.800 0.046 0 0 0.275</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_02_27</name><pose>4.827 -1.780 0.045 0 0 5.714</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_02_28</name><pose>5.220 -1.797 0.046 0 0 5.190</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_02_29</name><pose>5.607 -1.780 0.045 0 0 0.534</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_02_30</name><pose>5.963 -1.793 0.046 0 0 5.249</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_03_00</name><pose>-5.995 -1.194 0.046 0 0 3.073</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_03_01</name><pose>-5.640 -1.185 0.046 0 0 4.140</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_03_02</name><pose>-5.235 -1.188 0.046 0 0 5.314</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_03_03</name><pose>-4.821 -1.187 0.046 0 0 3.102</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_03_04</name><pose>-4.409 -1.201 0.046 0 0 3.875</pose></include>
+    <include><uri>model://betterave_debut_b</uri><name>b_03_05</name><pose>-3.989 -1.221 0.045 0 0 4.092</pose></include>
+    <include><uri>model://betterave_malade_b</uri><name>b_03_06</name><pose>-3.585 -1.194 0.046 0 0 0.381</pose></include>
+    <include><uri>model://betterave_malade_b</uri><name>b_03_07</name><pose>-3.218 -1.191 0.046 0 0 1.827</pose></include>
+    <include><uri>model://betterave_malade_a</uri><name>b_03_08</name><pose>-2.799 -1.202 0.046 0 0 6.238</pose></include>
+    <include><uri>model://betterave_debut_b</uri><name>b_03_09</name><pose>-2.396 -1.209 0.046 0 0 0.110</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_03_10</name><pose>-2.003 -1.184 0.046 0 0 6.242</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_03_11</name><pose>-1.609 -1.179 0.045 0 0 3.652</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_03_12</name><pose>-1.229 -1.199 0.046 0 0 3.789</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_03_13</name><pose>-0.789 -1.211 0.046 0 0 1.453</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_03_15</name><pose>-0.040 -1.200 0.046 0 0 4.567</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_03_16</name><pose>0.393 -1.206 0.046 0 0 0.011</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_03_17</name><pose>0.820 -1.183 0.046 0 0 4.478</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_03_18</name><pose>1.232 -1.211 0.046 0 0 2.450</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_03_19</name><pose>1.630 -1.221 0.045 0 0 5.365</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_03_20</name><pose>1.982 -1.222 0.045 0 0 1.566</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_03_21</name><pose>2.381 -1.199 0.046 0 0 4.931</pose></include>
+    <include><uri>model://betterave_debut_b</uri><name>b_03_22</name><pose>2.794 -1.224 0.045 0 0 5.736</pose></include>
+    <include><uri>model://betterave_malade_a</uri><name>b_03_23</name><pose>3.235 -1.198 0.046 0 0 5.862</pose></include>
+    <include><uri>model://betterave_malade_b</uri><name>b_03_24</name><pose>3.593 -1.194 0.046 0 0 3.049</pose></include>
+    <include><uri>model://betterave_malade_b</uri><name>b_03_25</name><pose>4.033 -1.197 0.046 0 0 2.158</pose></include>
+    <include><uri>model://betterave_malade_b</uri><name>b_03_26</name><pose>4.384 -1.188 0.046 0 0 2.551</pose></include>
+    <include><uri>model://betterave_debut_a</uri><name>b_03_27</name><pose>4.779 -1.201 0.046 0 0 1.051</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_03_28</name><pose>5.173 -1.215 0.046 0 0 3.456</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_03_29</name><pose>5.596 -1.208 0.046 0 0 0.877</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_03_30</name><pose>5.975 -1.220 0.045 0 0 2.005</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_04_00</name><pose>-6.011 -0.585 0.044 0 0 4.708</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_04_01</name><pose>-5.607 -0.604 0.046 0 0 1.697</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_04_02</name><pose>-5.180 -0.600 0.046 0 0 0.790</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_04_03</name><pose>-4.800 -0.594 0.046 0 0 0.582</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_04_04</name><pose>-4.368 -0.606 0.046 0 0 5.991</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_04_06</name><pose>-3.637 -0.590 0.046 0 0 6.081</pose></include>
+    <include><uri>model://betterave_debut_b</uri><name>b_04_07</name><pose>-3.201 -0.621 0.045 0 0 6.106</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_04_08</name><pose>-2.820 -0.620 0.045 0 0 5.913</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_04_09</name><pose>-2.382 -0.593 0.046 0 0 0.534</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_04_10</name><pose>-1.978 -0.625 0.045 0 0 4.054</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_04_11</name><pose>-1.616 -0.619 0.046 0 0 4.387</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_04_12</name><pose>-1.231 -0.621 0.045 0 0 2.437</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_04_14</name><pose>-0.416 -0.602 0.046 0 0 2.985</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_04_15</name><pose>-0.021 -0.613 0.046 0 0 0.347</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_04_16</name><pose>0.376 -0.581 0.045 0 0 1.616</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_04_17</name><pose>0.813 -0.579 0.045 0 0 4.370</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_04_18</name><pose>1.217 -0.607 0.046 0 0 5.006</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_04_19</name><pose>1.619 -0.600 0.046 0 0 1.958</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_04_20</name><pose>2.026 -0.613 0.046 0 0 0.685</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_04_21</name><pose>2.410 -0.594 0.046 0 0 2.619</pose></include>
+    <include><uri>model://betterave_debut_b</uri><name>b_04_22</name><pose>2.813 -0.578 0.045 0 0 0.341</pose></include>
+    <include><uri>model://betterave_malade_a</uri><name>b_04_23</name><pose>3.162 -0.595 0.046 0 0 1.156</pose></include>
+    <include><uri>model://betterave_malade_a</uri><name>b_04_24</name><pose>3.596 -0.589 0.046 0 0 6.264</pose></include>
+    <include><uri>model://betterave_malade_b</uri><name>b_04_25</name><pose>4.035 -0.609 0.046 0 0 0.200</pose></include>
+    <include><uri>model://betterave_malade_b</uri><name>b_04_26</name><pose>4.413 -0.606 0.046 0 0 2.778</pose></include>
+    <include><uri>model://betterave_debut_b</uri><name>b_04_27</name><pose>4.769 -0.621 0.045 0 0 6.001</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_04_28</name><pose>5.170 -0.577 0.045 0 0 4.828</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_04_29</name><pose>5.585 -0.585 0.046 0 0 1.229</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_04_30</name><pose>6.003 -0.603 0.045 0 0 0.190</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_05_00</name><pose>-6.007 0.016 0.044 0 0 2.359</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_05_01</name><pose>-5.603 0.015 0.046 0 0 4.693</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_05_02</name><pose>-5.168 -0.008 0.046 0 0 1.646</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_05_03</name><pose>-4.783 -0.009 0.046 0 0 4.531</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_05_04</name><pose>-4.392 0.015 0.046 0 0 0.152</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_05_05</name><pose>-4.021 -0.001 0.046 0 0 4.960</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_05_06</name><pose>-3.567 0.016 0.046 0 0 1.149</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_05_07</name><pose>-3.176 0.012 0.046 0 0 3.814</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_05_08</name><pose>-2.814 -0.009 0.046 0 0 3.215</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_05_09</name><pose>-2.409 -0.017 0.046 0 0 3.025</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_05_10</name><pose>-1.996 -0.017 0.046 0 0 6.204</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_05_11</name><pose>-1.619 -0.021 0.045 0 0 6.207</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_05_12</name><pose>-1.162 -0.016 0.046 0 0 3.896</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_05_13</name><pose>-0.786 0.012 0.046 0 0 4.897</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_05_14</name><pose>-0.416 -0.011 0.046 0 0 4.635</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_05_15</name><pose>-0.024 -0.013 0.046 0 0 1.767</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_05_16</name><pose>0.433 -0.016 0.046 0 0 6.233</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_05_17</name><pose>0.801 -0.013 0.046 0 0 6.223</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_05_18</name><pose>1.168 -0.001 0.046 0 0 5.742</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_05_19</name><pose>1.563 -0.010 0.046 0 0 3.771</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_05_20</name><pose>2.026 -0.015 0.046 0 0 2.820</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_05_21</name><pose>2.381 0.014 0.046 0 0 4.003</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_05_22</name><pose>2.817 -0.008 0.046 0 0 0.888</pose></include>
+    <include><uri>model://betterave_debut_a</uri><name>b_05_23</name><pose>3.176 -0.012 0.046 0 0 5.117</pose></include>
+    <include><uri>model://betterave_debut_b</uri><name>b_05_24</name><pose>3.626 -0.005 0.046 0 0 0.489</pose></include>
+    <include><uri>model://betterave_debut_b</uri><name>b_05_25</name><pose>3.963 -0.000 0.046 0 0 0.637</pose></include>
+    <include><uri>model://betterave_debut_a</uri><name>b_05_26</name><pose>4.392 0.003 0.046 0 0 4.101</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_05_27</name><pose>4.792 -0.011 0.046 0 0 2.624</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_05_28</name><pose>5.164 0.012 0.046 0 0 2.615</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_05_29</name><pose>5.629 0.025 0.045 0 0 2.454</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_05_30</name><pose>5.992 0.022 0.045 0 0 2.661</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_06_00</name><pose>-5.974 0.595 0.046 0 0 4.855</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_06_01</name><pose>-5.630 0.578 0.045 0 0 0.559</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_06_02</name><pose>-5.190 0.594 0.046 0 0 2.185</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_06_03</name><pose>-4.827 0.584 0.046 0 0 3.080</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_06_04</name><pose>-4.376 0.623 0.045 0 0 5.258</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_06_05</name><pose>-4.037 0.621 0.045 0 0 0.542</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_06_06</name><pose>-3.583 0.609 0.046 0 0 3.900</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_06_07</name><pose>-3.191 0.585 0.046 0 0 0.262</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_06_08</name><pose>-2.765 0.583 0.046 0 0 1.552</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_06_09</name><pose>-2.382 0.620 0.045 0 0 4.194</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_06_10</name><pose>-2.014 0.594 0.046 0 0 4.076</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_06_11</name><pose>-1.615 0.587 0.046 0 0 2.806</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_06_12</name><pose>-1.205 0.576 0.045 0 0 2.922</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_06_13</name><pose>-0.804 0.606 0.046 0 0 5.090</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_06_14</name><pose>-0.408 0.578 0.045 0 0 0.576</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_06_15</name><pose>-0.005 0.601 0.046 0 0 0.516</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_06_16</name><pose>0.419 0.614 0.046 0 0 4.723</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_06_17</name><pose>0.832 0.608 0.046 0 0 5.382</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_06_18</name><pose>1.240 0.612 0.046 0 0 0.827</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_06_19</name><pose>1.631 0.589 0.046 0 0 4.309</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_06_20</name><pose>2.018 0.586 0.046 0 0 0.997</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_06_21</name><pose>2.432 0.589 0.046 0 0 1.596</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_06_22</name><pose>2.837 0.599 0.046 0 0 2.004</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_06_23</name><pose>3.163 0.584 0.046 0 0 4.268</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_06_24</name><pose>3.632 0.583 0.046 0 0 4.825</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_06_25</name><pose>3.964 0.618 0.046 0 0 3.487</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_06_26</name><pose>4.406 0.619 0.046 0 0 4.634</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_06_27</name><pose>4.790 0.594 0.046 0 0 2.262</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_06_28</name><pose>5.221 0.597 0.046 0 0 1.861</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_06_29</name><pose>5.601 0.591 0.046 0 0 4.603</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_06_30</name><pose>6.020 0.586 0.042 0 0 2.623</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_07_00</name><pose>-6.011 1.177 0.044 0 0 0.140</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_07_01</name><pose>-5.640 1.193 0.046 0 0 3.354</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_07_02</name><pose>-5.207 1.190 0.046 0 0 3.918</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_07_03</name><pose>-4.802 1.182 0.046 0 0 4.443</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_07_04</name><pose>-4.404 1.178 0.045 0 0 2.524</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_07_05</name><pose>-4.019 1.176 0.045 0 0 3.735</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_07_06</name><pose>-3.594 1.205 0.046 0 0 1.561</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_07_07</name><pose>-3.168 1.177 0.045 0 0 1.166</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_07_08</name><pose>-2.827 1.221 0.045 0 0 0.893</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_07_09</name><pose>-2.424 1.205 0.046 0 0 5.108</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_07_10</name><pose>-2.026 1.190 0.046 0 0 6.243</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_07_11</name><pose>-1.582 1.199 0.046 0 0 5.303</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_07_12</name><pose>-1.180 1.198 0.046 0 0 1.101</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_07_13</name><pose>-0.760 1.188 0.046 0 0 2.107</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_07_14</name><pose>-0.380 1.210 0.046 0 0 1.670</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_07_15</name><pose>0.004 1.197 0.046 0 0 1.856</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_07_16</name><pose>0.434 1.220 0.045 0 0 1.066</pose></include>
+    <include><uri>model://betterave_debut_a</uri><name>b_07_17</name><pose>0.832 1.217 0.046 0 0 4.686</pose></include>
+    <include><uri>model://betterave_malade_a</uri><name>b_07_18</name><pose>1.186 1.219 0.046 0 0 2.383</pose></include>
+    <include><uri>model://betterave_malade_b</uri><name>b_07_19</name><pose>1.628 1.221 0.045 0 0 2.965</pose></include>
+    <include><uri>model://betterave_debut_a</uri><name>b_07_20</name><pose>2.002 1.175 0.045 0 0 3.582</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_07_21</name><pose>2.385 1.186 0.046 0 0 3.549</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_07_22</name><pose>2.774 1.177 0.045 0 0 2.166</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_07_23</name><pose>3.171 1.176 0.045 0 0 4.377</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_07_24</name><pose>3.619 1.178 0.045 0 0 1.252</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_07_25</name><pose>4.036 1.202 0.046 0 0 0.673</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_07_26</name><pose>4.376 1.181 0.045 0 0 5.181</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_07_27</name><pose>4.811 1.189 0.046 0 0 4.974</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_07_28</name><pose>5.212 1.190 0.046 0 0 0.131</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_07_29</name><pose>5.581 1.189 0.046 0 0 5.717</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_07_30</name><pose>6.022 1.205 0.042 0 0 3.883</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_08_00</name><pose>-6.038 1.796 0.040 0 0 2.178</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_08_01</name><pose>-5.584 1.802 0.046 0 0 3.608</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_08_02</name><pose>-5.217 1.797 0.046 0 0 4.786</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_08_03</name><pose>-4.762 1.775 0.045 0 0 4.366</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_08_04</name><pose>-4.374 1.823 0.045 0 0 3.630</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_08_05</name><pose>-4.027 1.816 0.046 0 0 3.129</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_08_06</name><pose>-3.631 1.807 0.046 0 0 3.943</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_08_07</name><pose>-3.212 1.795 0.046 0 0 2.651</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_08_08</name><pose>-2.788 1.794 0.046 0 0 5.660</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_08_09</name><pose>-2.400 1.794 0.046 0 0 5.928</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_08_10</name><pose>-2.030 1.805 0.046 0 0 2.188</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_08_11</name><pose>-1.614 1.783 0.046 0 0 1.065</pose></include>
+    <include><uri>model://betterave_debut_a</uri><name>b_08_12</name><pose>-1.205 1.814 0.046 0 0 2.098</pose></include>
+    <include><uri>model://betterave_debut_b</uri><name>b_08_13</name><pose>-0.789 1.810 0.046 0 0 1.893</pose></include>
+    <include><uri>model://betterave_debut_a</uri><name>b_08_14</name><pose>-0.384 1.817 0.046 0 0 6.122</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_08_15</name><pose>0.018 1.805 0.046 0 0 2.060</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_08_16</name><pose>0.375 1.824 0.045 0 0 1.034</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_08_17</name><pose>0.813 1.785 0.046 0 0 4.992</pose></include>
+    <include><uri>model://betterave_debut_a</uri><name>b_08_18</name><pose>1.219 1.797 0.046 0 0 1.763</pose></include>
+    <include><uri>model://betterave_debut_b</uri><name>b_08_20</name><pose>2.028 1.797 0.046 0 0 2.909</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_08_21</name><pose>2.371 1.805 0.046 0 0 5.702</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_08_22</name><pose>2.794 1.804 0.046 0 0 5.313</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_08_23</name><pose>3.213 1.808 0.046 0 0 4.268</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_08_24</name><pose>3.611 1.798 0.046 0 0 5.619</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_08_25</name><pose>3.979 1.795 0.046 0 0 1.570</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_08_26</name><pose>4.394 1.798 0.046 0 0 3.255</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_08_27</name><pose>4.813 1.819 0.046 0 0 4.887</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_08_28</name><pose>5.191 1.799 0.046 0 0 1.578</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_08_29</name><pose>5.577 1.811 0.046 0 0 3.261</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_08_30</name><pose>5.968 1.804 0.046 0 0 3.217</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_09_00</name><pose>-5.989 2.416 0.046 0 0 4.660</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_09_01</name><pose>-5.603 2.425 0.045 0 0 4.579</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_09_02</name><pose>-5.191 2.407 0.046 0 0 2.510</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_09_03</name><pose>-4.839 2.396 0.046 0 0 3.644</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_09_04</name><pose>-4.431 2.390 0.046 0 0 6.244</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_09_05</name><pose>-3.963 2.398 0.046 0 0 5.084</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_09_06</name><pose>-3.589 2.398 0.046 0 0 5.116</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_09_07</name><pose>-3.228 2.408 0.046 0 0 2.940</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_09_08</name><pose>-2.816 2.402 0.046 0 0 2.228</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_09_09</name><pose>-2.372 2.388 0.046 0 0 6.173</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_09_10</name><pose>-1.986 2.399 0.046 0 0 2.248</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_09_11</name><pose>-1.588 2.391 0.046 0 0 4.140</pose></include>
+    <include><uri>model://betterave_debut_a</uri><name>b_09_12</name><pose>-1.211 2.421 0.045 0 0 0.536</pose></include>
+    <include><uri>model://betterave_malade_b</uri><name>b_09_13</name><pose>-0.795 2.391 0.046 0 0 3.976</pose></include>
+    <include><uri>model://betterave_malade_b</uri><name>b_09_14</name><pose>-0.439 2.376 0.045 0 0 1.570</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_09_15</name><pose>-0.032 2.382 0.046 0 0 2.176</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_09_16</name><pose>0.372 2.420 0.045 0 0 3.828</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_09_17</name><pose>0.815 2.424 0.045 0 0 1.239</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_09_18</name><pose>1.215 2.402 0.046 0 0 4.215</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_09_19</name><pose>1.569 2.381 0.046 0 0 2.972</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_09_20</name><pose>2.005 2.399 0.046 0 0 1.548</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_09_21</name><pose>2.373 2.405 0.046 0 0 5.280</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_09_22</name><pose>2.797 2.403 0.046 0 0 2.355</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_09_23</name><pose>3.194 2.423 0.045 0 0 3.995</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_09_24</name><pose>3.562 2.405 0.046 0 0 5.078</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_09_25</name><pose>3.968 2.399 0.046 0 0 0.213</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_09_26</name><pose>4.417 2.406 0.046 0 0 2.143</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_09_27</name><pose>4.822 2.403 0.046 0 0 2.733</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_09_28</name><pose>5.194 2.403 0.046 0 0 2.231</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_09_29</name><pose>5.599 2.392 0.046 0 0 6.123</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_09_30</name><pose>6.012 2.415 0.044 0 0 4.479</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_10_00</name><pose>-6.030 3.024 0.040 0 0 2.505</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_10_01</name><pose>-5.596 2.995 0.046 0 0 1.887</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_10_02</name><pose>-5.240 2.984 0.046 0 0 4.955</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_10_03</name><pose>-4.767 3.006 0.046 0 0 1.335</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_10_04</name><pose>-4.387 2.998 0.046 0 0 4.168</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_10_05</name><pose>-3.970 2.996 0.046 0 0 2.316</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_10_06</name><pose>-3.574 3.014 0.046 0 0 5.416</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_10_08</name><pose>-2.795 3.004 0.046 0 0 3.564</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_10_09</name><pose>-2.437 2.981 0.046 0 0 2.804</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_10_10</name><pose>-2.039 2.994 0.046 0 0 2.986</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_10_11</name><pose>-1.607 2.980 0.045 0 0 5.625</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_10_13</name><pose>-0.786 3.024 0.045 0 0 5.461</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_10_14</name><pose>-0.430 2.976 0.045 0 0 2.831</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_10_15</name><pose>0.020 3.021 0.045 0 0 4.583</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_10_16</name><pose>0.367 3.006 0.046 0 0 4.205</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_10_17</name><pose>0.831 3.021 0.045 0 0 0.072</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_10_18</name><pose>1.161 3.008 0.046 0 0 2.443</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_10_19</name><pose>1.585 3.005 0.046 0 0 3.824</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_10_20</name><pose>1.985 3.022 0.045 0 0 4.251</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_10_21</name><pose>2.372 3.015 0.046 0 0 3.955</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_10_22</name><pose>2.793 2.994 0.046 0 0 4.927</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_10_23</name><pose>3.205 2.990 0.046 0 0 5.461</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_10_24</name><pose>3.618 2.976 0.045 0 0 3.672</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_10_25</name><pose>4.038 2.987 0.046 0 0 3.779</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_10_26</name><pose>4.432 3.015 0.046 0 0 2.019</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_10_27</name><pose>4.781 2.983 0.046 0 0 1.812</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_10_28</name><pose>5.171 3.020 0.045 0 0 1.720</pose></include>
+    <include><uri>model://betterave_saine_b</uri><name>b_10_29</name><pose>5.628 3.015 0.046 0 0 2.178</pose></include>
+    <include><uri>model://betterave_saine_a</uri><name>b_10_30</name><pose>5.967 3.003 0.046 0 0 4.947</pose></include>
+  </world>
+</sdf>

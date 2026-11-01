@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vigie Betterave · Console</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@500;600;700&family=Instrument+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Console de supervision reliée à la simulation ROS 2 / Gazebo via rosbridge */
+:root{
+  --bg:#eef1ec; --surface:#fff; --surface-2:#e3e9e1; --fg:#15201b; --muted:#5b6a62; --line:#cdd7cf;
+  --accent:#a3245f; --accent-soft:#a3245f1f; --leaf:#2f8a4a; --warn:#b97c0c; --crit:#c43d2f;
+  --soil:#7a5c40; --soil-2:#6b4f36; --row:#3d7a43; --grass:#7fa65a;
+  --f-display:"Familjen Grotesk","Helvetica Neue",Arial,sans-serif;
+  --f-body:"Instrument Sans","Segoe UI",system-ui,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){:root{
+  --bg:#0d1411; --surface:#141e1a; --surface-2:#1b2722; --fg:#e4ebe6; --muted:#8c9d94; --line:#2a3832;
+  --accent:#e0588f; --accent-soft:#e0588f24; --leaf:#4fb36a; --warn:#e2a634; --crit:#ef5a48;
+  --soil:#5b4532; --soil-2:#4e3b2b; --row:#4a9a52; --grass:#3d5a2e; color-scheme:dark}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:14px/1.45 var(--f-body)}
+.wrap{max-width:1400px;margin:0 auto;padding:18px 20px 40px;display:grid;gap:16px}
+.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.label{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.top{display:flex;flex-wrap:wrap;gap:12px 24px;align-items:center;justify-content:space-between}
+.brand{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+.brand h1{font:700 26px var(--f-display);margin:0}.brand h1 span{color:var(--accent)}
+.brand p{margin:0;color:var(--muted)}
+.conn{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+input{font:inherit;font-family:var(--f-mono);border:1px solid var(--line);border-radius:8px;padding:7px 10px;background:var(--surface);color:var(--fg);width:210px}
+button{font:inherit;font-weight:600;cursor:pointer;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--fg);padding:9px 15px}
+button:hover{border-color:var(--muted)} button:disabled{opacity:.45;cursor:not-allowed}
+button:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+button.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+button.stop{border:2px solid var(--crit);color:var(--crit);background:transparent}
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;padding:3px 10px;border-radius:999px;background:var(--surface-2);color:var(--muted)}
+.pill i{width:8px;height:8px;border-radius:50%;background:currentColor}
+.pill.ok{background:var(--leaf);color:#fff}.pill.warn{background:var(--warn);color:#fff}.pill.crit{background:var(--crit);color:#fff}.pill.acc{background:var(--accent);color:#fff}
+.bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:10px 12px}
+.bar .grow{flex:1}
+.main{display:grid;grid-template-columns:minmax(0,1.9fr) minmax(0,1fr);gap:16px;align-items:start}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px;min-width:0}
+.panel h2{font:600 16px var(--f-display);margin:0}
+.head{display:flex;justify-content:space-between;align-items:baseline;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.map{position:relative;width:100%;aspect-ratio:2/1;border-radius:10px;overflow:hidden;background:var(--grass)}
+.map canvas{position:absolute;inset:0;width:100%;height:100%}
+.legend{display:flex;flex-wrap:wrap;gap:6px 16px;margin-top:10px;color:var(--muted);font-size:12px}
+.legend span{display:inline-flex;gap:6px;align-items:center}.sw{width:12px;height:12px;border-radius:3px;display:inline-block}
+.side{display:grid;gap:16px;min-width:0}
+.cam{position:relative;aspect-ratio:16/9;border-radius:10px;overflow:hidden;background:#1d2a20;display:grid;place-items:center;color:#9fb3a7}
+.cam img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.kpis{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.kpi{background:var(--surface-2);border-radius:10px;padding:12px;display:grid;gap:2px}
+.kpi .v{font:700 26px var(--f-display);font-variant-numeric:tabular-nums}
+.kpi.hero{grid-column:1/-1;background:var(--accent-soft)}.kpi.hero .v{font-size:36px;color:var(--accent)}
+.lower{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:16px}
+.log{list-style:none;margin:0;padding:0;display:grid;gap:6px;max-height:300px;overflow:auto}
+.log li{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 10px;padding:8px 10px;border-radius:8px;background:var(--surface-2);border-left:3px solid var(--line)}
+.log li.det{border-left-color:var(--crit)}.log li.op{border-left-color:var(--accent)}.log li.info{border-left-color:var(--leaf)}
+.log .t{color:var(--muted);font-size:12px}
+.foyers{width:100%;border-collapse:collapse;font-size:13px}
+.foyers th,.foyers td{text-align:left;padding:7px 8px;border-bottom:1px solid var(--line)}
+.foyers th{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.empty{color:var(--muted);font-size:13px;padding:10px 2px}
+.note{color:var(--muted);font-size:12px;margin:8px 0 0}
+@media (max-width:1000px){.main,.lower{grid-template-columns:minmax(0,1fr)}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="brand"><h1>Vigie <span>Betterave</span></h1><p>Parcelle P-07 · Rover R1 · simulation Gazebo</p></div>
+    <div class="conn">
+      <span class="pill" id="connPill"><i></i>Déconnecté</span>
+      <label class="label" for="url">Passerelle</label>
+      <input id="url" value="ws://localhost:9090">
+      <button id="btnConn" type="button">Connecter</button>
+    </div>
+  </header>
+
+  <div class="bar">
+    <span class="label">Mission</span>
+    <span class="pill" id="missionPill">—</span>
+    <span class="grow"></span>
+    <button id="bStart" class="primary" type="button" data-cmd="demarrer">Lancer la mission</button>
+    <button id="bPause" type="button" data-cmd="pause">Pause</button>
+    <button id="bResume" type="button" data-cmd="reprendre">Reprendre</button>
+    <button id="bHome" type="button" data-cmd="retour">Retour à la station</button>
+    <button id="bStop" class="stop" type="button" data-cmd="arret_urgence">Arrêt d'urgence</button>
+  </div>
+
+  <section class="main">
+    <div class="panel">
+      <div class="head"><h2>Carte de la parcelle</h2><span class="label mono" id="pose">Position —</span></div>
+      <div class="map"><canvas id="map" aria-label="Carte de la parcelle avec le rover et les foyers"></canvas></div>
+      <div class="legend">
+        <span><i class="sw" style="background:var(--row)"></i>Rang de betteraves</span>
+        <span><i class="sw" style="background:var(--crit)"></i>Foyer détecté</span>
+        <span><i class="sw" style="border:2px dashed var(--leaf)"></i>Foyer traité</span>
+        <span><i class="sw" style="background:var(--accent)"></i>Rover R1 et trajectoire</span>
+      </div>
+    </div>
+    <aside class="side">
+      <div class="panel">
+        <div class="head"><h2>Caméra du rover</h2><span class="label">Détection IA</span></div>
+        <div class="cam" id="cam"><span id="camMsg">En attente de l'image…</span><img id="camImg" alt="" hidden></div>
+      </div>
+      <div class="panel">
+        <div class="kpis">
+          <div class="kpi hero"><span class="label">Fongicide économisé</span><span class="v mono" id="kSave">–</span><span class="label" style="text-transform:none;letter-spacing:0">par rapport à un traitement plein champ (90 L)</span></div>
+          <div class="kpi"><span class="label">Foyers détectés</span><span class="v" id="kDet">0</span></div>
+          <div class="kpi"><span class="label">Foyers traités</span><span class="v" id="kTrt">0</span></div>
+          <div class="kpi"><span class="label">Bouillie pulvérisée</span><span class="v mono" id="kL">0,00 L</span></div>
+          <div class="kpi"><span class="label">Distance parcourue</span><span class="v mono" id="kDist">0 m</span></div>
+        </div>
+      </div>
+    </aside>
+  </section>
+
+  <section class="lower">
+    <div class="panel"><div class="head"><h2>Journal de mission</h2><span class="label" id="logCount">0 événement</span></div><ul class="log" id="log"></ul></div>
+    <div class="panel"><div class="head"><h2>Foyers</h2><span class="label">Repère : station du rover</span></div>
+      <div id="foyersBox"><p class="empty">Aucun foyer détecté pour l'instant.</p></div>
+      <p class="note">Positions estimées à partir de l'odométrie du rover et de la caméra.</p>
+    </div>
+  </section>
+</div>
+
+<script>
+(() => {
+const SPAWN = {x:-6.9, y:0.3};
+const ROWS = Array.from({length:11}, (_, i) => -3 + i * 0.6);
+const FULL_L = 90;
+const VIEW = {x0:-9, x1:9, y0:-4.5, y1:4.5};
+const $ = id => document.getElementById(id);
+const fmt = (n, d = 1) => n.toFixed(d).replace('.', ',');
+const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+
+let ws = null, retry = null, advertised = false;
+const S = {pose:null, trail:[], foyers:[], treated:new Map(), litres:0, dist:0, etat:'—', log:[]};
+
+function log(kind, msg){
+  const t = new Date().toLocaleTimeString('fr-FR');
+  S.log.unshift({kind, msg, t});
+  $('log').innerHTML = S.log.slice(0, 200).map(e => `<li class="${e.kind}"><span class="t mono">${e.t}</span><span>${e.msg}</span></li>`).join('');
+  $('logCount').textContent = S.log.length + (S.log.length > 1 ? ' événements' : ' événement');
+}
+
+/* ---------- rosbridge ---------- */
+function send(o){ if (ws && ws.readyState === 1) ws.send(JSON.stringify(o)); }
+function sub(topic, type, throttle = 0){ send({op:'subscribe', topic, type, throttle_rate:throttle, queue_length:1}); }
+function connect(){
+  clearTimeout(retry);
+  if (ws) { ws.onclose = null; ws.close(); }
+  const url = $('url').value.trim();
+  setConn('warn', 'Connexion…');
+  try { ws = new WebSocket(url); } catch (e) { setConn('crit', 'Adresse invalide'); return; }
+  ws.onopen = () => {
+    setConn('ok', 'Connecté'); advertised = false;
+    log('info', `Connecté à la passerelle ${url}`);
+    sub('/odom', 'nav_msgs/msg/Odometry', 150);
+    sub('/vigie/foyers', 'std_msgs/msg/String');
+    sub('/vigie/pulverisation', 'std_msgs/msg/String');
+    sub('/vigie/etat', 'std_msgs/msg/String');
+    sub('/vigie/image_annotee/compressed', 'sensor_msgs/msg/CompressedImage', 200);
+    send({op:'advertise', topic:'/vigie/commande', type:'std_msgs/msg/String'}); advertised = true;
+  };
+  ws.onmessage = ev => { const m = JSON.parse(ev.data); if (m.op === 'publish') onMsg(m.topic, m.msg); };
+  ws.onclose = () => { setConn('crit', 'Déconnecté'); retry = setTimeout(connect, 3000); };
+  ws.onerror = () => {};
+}
+function setConn(cls, txt){ const p = $('connPill'); p.className = 'pill ' + cls; p.innerHTML = '<i></i>' + txt; }
+
+function onMsg(topic, msg){
+  if (topic === '/odom'){
+    const p = msg.pose.pose.position, q = msg.pose.pose.orientation;
+    const yaw = Math.atan2(2 * (q.w * q.z + q.x * q.y), 1 - 2 * (q.y * q.y + q.z * q.z));
+    const w = {x:p.x + SPAWN.x, y:p.y + SPAWN.y, yaw};
+    const last = S.trail[S.trail.length - 1];
+    if (!last || Math.hypot(last.x - w.x, last.y - w.y) > 0.08){
+      if (last) S.dist += Math.hypot(last.x - w.x, last.y - w.y);
+      S.trail.push({x:w.x, y:w.y}); if (S.trail.length > 4000) S.trail.shift();
+    }
+    S.pose = w;
+    $('pose').textContent = `x ${fmt(w.x, 2)} · y ${fmt(w.y, 2)} m`;
+  } else if (topic === '/vigie/foyers'){
+    const list = JSON.parse(msg.data);
+    list.filter(f => !S.foyers.find(g => g.id === f.id)).forEach(f =>
+      log('det', `Foyer ${f.id} détecté · x ${fmt(f.x + SPAWN.x, 2)} m, y ${fmt(f.y + SPAWN.y, 2)} m · indice ${fmt(f.score, 2)}`));
+    S.foyers = list;
+  } else if (topic === '/vigie/pulverisation'){
+    const d = JSON.parse(msg.data);
+    if (!S.treated.has(d.foyer)){ S.treated.set(d.foyer, d); S.litres += d.litres || 0; }
+    log('op', `Pulvérisation sur le foyer ${d.foyer} · ${fmt(d.litres || 0, 2)} L`);
+  } else if (topic === '/vigie/etat'){
+    if (msg.data !== S.etat){ S.etat = msg.data; log('info', `Mission : ${msg.data}`); }
+  } else if (topic === '/vigie/image_annotee/compressed'){
+    const img = $('camImg'); img.src = 'data:image/jpeg;base64,' + msg.data; img.hidden = false; $('camMsg').hidden = true;
+  }
+}
+
+document.querySelectorAll('[data-cmd]').forEach(b => b.addEventListener('click', () => {
+  if (!ws || ws.readyState !== 1) { log('det', 'Commande impossible : la console n\'est pas connectée'); return; }
+  send({op:'publish', topic:'/vigie/commande', msg:{data:b.dataset.cmd}});
+  log('op', `Commande envoyée : ${b.textContent}`);
+}));
+$('btnConn').addEventListener('click', connect);
+
+/* ---------- affichage ---------- */
+const cv = $('map'), ctx = cv.getContext('2d');
+function draw(){
+  const r = cv.getBoundingClientRect(), dpr = Math.min(2, devicePixelRatio || 1);
+  cv.width = Math.round(r.width * dpr); cv.height = Math.round(r.height * dpr);
+  const k = cv.width / (VIEW.x1 - VIEW.x0);
+  const X = x => (x - VIEW.x0) * k, Y = y => (VIEW.y1 - y) * k;
+  ctx.fillStyle = css('--grass'); ctx.fillRect(0, 0, cv.width, cv.height);
+  ctx.fillStyle = css('--soil'); ctx.fillRect(X(-7.4), Y(3.6), 14.8 * k, 7.2 * k);
+  ctx.fillStyle = css('--row');
+  for (const ry of ROWS) for (let x = -6; x <= 6.01; x += 0.4){ ctx.beginPath(); ctx.arc(X(x), Y(ry), 0.13 * k, 0, 7); ctx.fill(); }
+  // station
+  ctx.strokeStyle = '#fff'; ctx.lineWidth = 2; ctx.strokeRect(X(SPAWN.x) - 0.3 * k, Y(SPAWN.y) - 0.15 * k, 0.6 * k, 0.3 * k);
+  // foyers
+  ctx.font = `600 ${Math.max(11, 0.32 * k)}px ${css('--f-mono')}`;
+  for (const f of S.foyers){
+    const fx = X(f.x + SPAWN.x), fy = Y(f.y + SPAWN.y), done = S.treated.has(f.id);
+    const g = ctx.createRadialGradient(fx, fy, 0, fx, fy, 0.7 * k);
+    g.addColorStop(0, css('--crit') + 'cc'); g.addColorStop(1, css('--crit') + '00');
+    ctx.fillStyle = g; ctx.beginPath(); ctx.arc(fx, fy, 0.7 * k, 0, 7); ctx.fill();
+    if (done){ ctx.setLineDash([6, 4]); ctx.strokeStyle = css('--leaf'); ctx.lineWidth = 3; ctx.beginPath(); ctx.arc(fx, fy, 0.55 * k, 0, 7); ctx.stroke(); ctx.setLineDash([]); }
+    ctx.fillStyle = 'rgba(15,22,19,.8)'; const lab = `F${f.id}`, tw = ctx.measureText(lab).width + 10;
+    ctx.fillRect(fx + 0.5 * k, fy - 0.75 * k, tw, 20); ctx.fillStyle = '#fff'; ctx.textBaseline = 'middle'; ctx.fillText(lab, fx + 0.5 * k + 5, fy - 0.75 * k + 10);
+  }
+  // trajectoire
+  if (S.trail.length > 1){
+    ctx.strokeStyle = css('--accent'); ctx.globalAlpha = .8; ctx.lineWidth = Math.max(2, 0.06 * k); ctx.lineJoin = 'round';
+    ctx.beginPath(); S.trail.forEach((p, i) => i ? ctx.lineTo(X(p.x), Y(p.y)) : ctx.moveTo(X(p.x), Y(p.y))); ctx.stroke(); ctx.globalAlpha = 1;
+  }
+  // rover
+  if (S.pose){
+    ctx.save(); ctx.translate(X(S.pose.x), Y(S.pose.y)); ctx.rotate(-S.pose.yaw);
+    ctx.fillStyle = css('--accent') + '30'; ctx.beginPath(); ctx.moveTo(0, 0); ctx.arc(0, 0, 1.4 * k, -0.5, 0.5); ctx.fill();
+    ctx.fillStyle = css('--accent'); ctx.strokeStyle = '#fff'; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.roundRect(-0.22 * k, -0.15 * k, 0.44 * k, 0.3 * k, 4); ctx.fill(); ctx.stroke();
+    ctx.restore();
+  }
+  // KPIs
+  const trt = S.treated.size;
+  $('kDet').textContent = S.foyers.length; $('kTrt').textContent = trt;
+  $('kL').textContent = fmt(S.litres, 2) + ' L';
+  $('kSave').textContent = trt ? fmt((1 - S.litres / FULL_L) * 100) + ' %' : '–';
+  $('kDist').textContent = Math.round(S.dist) + ' m';
+  const e = S.etat, mp = $('missionPill');
+  mp.textContent = e;
+  mp.className = 'pill ' + (e.startsWith('pulverisation') ? 'acc' : e.includes('arret') ? 'crit' : e.includes('attente') || e === 'pause' ? 'warn' : e.includes('terminee') ? 'ok' : 'ok');
+  const box = $('foyersBox');
+  box.innerHTML = S.foyers.length ? `<table class="foyers"><thead><tr><th>Foyer</th><th>Position (m)</th><th>Indice</th><th>État</th></tr></thead><tbody>${
+    S.foyers.map(f => `<tr><td>F${f.id}</td><td class="mono">${fmt(f.x + SPAWN.x, 2)} ; ${fmt(f.y + SPAWN.y, 2)}</td><td class="mono">${fmt(f.score, 2)}</td><td>${S.treated.has(f.id) ? '<span class="pill ok">Traité</span>' : '<span class="pill crit">À traiter</span>'}</td></tr>`).join('')}</tbody></table>`
+    : '<p class="empty">Aucun foyer détecté pour l\'instant.</p>';
+  requestAnimationFrame(draw);
+}
+requestAnimationFrame(draw);
+connect();
+})();
+</script>
+</body>
+</html>

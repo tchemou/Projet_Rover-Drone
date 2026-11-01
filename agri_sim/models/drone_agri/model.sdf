@@ -1,0 +1,111 @@
+<?xml version="1.0"?>
+<sdf version="1.8">
+<model name="drone_agri">
+  <pose>0 0 0.12 0 0 0</pose>
+  <link name="base"><gravity>false</gravity>
+    <inertial><mass>1.2</mass><inertia><ixx>0.01</ixx><iyy>0.01</iyy><izz>0.018</izz></inertia></inertial>
+      <visual name="coque"><geometry><box><size>0.20 0.20 0.055</size></box></geometry><material><ambient>0.93 0.94 0.95 1</ambient><diffuse>0.93 0.94 0.95 1</diffuse><specular>0.5 0.5 0.5 1</specular>
+          <pbr><metal><metalness>0.1</metalness><roughness>0.35</roughness></metal></pbr></material></visual>
+      <visual name="dessus"><pose>0 0 0.034 0 0 0</pose><geometry><box><size>0.15 0.15 0.018</size></box></geometry><material><ambient>0.12 0.14 0.16 1</ambient><diffuse>0.12 0.14 0.16 1</diffuse><specular>0.5 0.5 0.5 1</specular>
+          <pbr><metal><metalness>0.3</metalness><roughness>0.4</roughness></metal></pbr></material></visual>
+      <visual name="bandeau"><pose>0.0 0 0.0 0 0 0</pose><geometry><box><size>0.205 0.045 0.057</size></box></geometry><material><ambient>0.64 0.14 0.37 1</ambient><diffuse>0.64 0.14 0.37 1</diffuse><specular>0.5 0.5 0.5 1</specular>
+          <pbr><metal><metalness>0.0</metalness><roughness>0.45</roughness></metal></pbr></material></visual>
+      <visual name="led_av"><pose>0.105 0 0.0 0 0 0</pose><geometry><sphere><radius>0.012</radius></sphere></geometry><material><ambient>0.2 1 0.4 1</ambient><diffuse>0.2 1 0.4 1</diffuse><emissive>0.2 1 0.4 1</emissive></material></visual>
+      <visual name="led_ar"><pose>-0.105 0 0.0 0 0 0</pose><geometry><sphere><radius>0.012</radius></sphere></geometry><material><ambient>1 0.2 0.2 1</ambient><diffuse>1 0.2 0.2 1</diffuse><emissive>1 0.15 0.15 1</emissive></material></visual>
+      <visual name="batterie"><pose>0 0 -0.045 0 0 0</pose><geometry><box><size>0.12 0.07 0.035</size></box></geometry><material><ambient>0.15 0.16 0.18 1</ambient><diffuse>0.15 0.16 0.18 1</diffuse><specular>0.5 0.5 0.5 1</specular>
+          <pbr><metal><metalness>0.2</metalness><roughness>0.6</roughness></metal></pbr></material></visual>
+      <visual name="bras0"><pose>0.135 0.135 0.005 0 0 0.7854</pose><geometry><box><size>0.382 0.032 0.022</size></box></geometry><material><ambient>0.14 0.15 0.17 1</ambient><diffuse>0.14 0.15 0.17 1</diffuse><specular>0.5 0.5 0.5 1</specular>
+          <pbr><metal><metalness>0.4</metalness><roughness>0.4</roughness></metal></pbr></material></visual>
+      <visual name="moteur0"><pose>0.27 0.27 0.02 0 0 0</pose><geometry><cylinder><radius>0.032</radius><length>0.05</length></cylinder></geometry><material><ambient>0.64 0.14 0.37 1</ambient><diffuse>0.64 0.14 0.37 1</diffuse><specular>0.5 0.5 0.5 1</specular>
+          <pbr><metal><metalness>0.6</metalness><roughness>0.3</roughness></metal></pbr></material></visual>
+      <visual name="pied0"><pose>0.216 0.216 -0.07 0 0 0</pose><geometry><cylinder><radius>0.007</radius><length>0.13</length></cylinder></geometry><material><ambient>0.1 0.1 0.1 1</ambient><diffuse>0.1 0.1 0.1 1</diffuse><specular>0.5 0.5 0.5 1</specular>
+          <pbr><metal><metalness>0.0</metalness><roughness>0.5</roughness></metal></pbr></material></visual>
+      <visual name="bras1"><pose>0.135 -0.135 0.005 0 0 -0.7854</pose><geometry><box><size>0.382 0.032 0.022</size></box></geometry><material><ambient>0.14 0.15 0.17 1</ambient><diffuse>0.14 0.15 0.17 1</diffuse><specular>0.5 0.5 0.5 1</specular>
+          <pbr><metal><metalness>0.4</metalness><roughness>0.4</roughness></metal></pbr></material></visual>
+      <visual name="moteur1"><pose>0.27 -0.27 0.02 0 0 0</pose><geometry><cylinder><radius>0.032</radius><length>0.05</length></cylinder></geometry><material><ambient>0.64 0.14 0.37 1</ambient><diffuse>0.64 0.14 0.37 1</diffuse><specular>0.5 0.5 0.5 1</specular>
+          <pbr><metal><metalness>0.6</metalness><roughness>0.3</roughness></metal></pbr></material></visual>
+      <visual name="pied1"><pose>0.216 -0.216 -0.07 0 0 0</pose><geometry><cylinder><radius>0.007</radius><length>0.13</length></cylinder></geometry><material><ambient>0.1 0.1 0.1 1</ambient><diffuse>0.1 0.1 0.1 1</diffuse><specular>0.5 0.5 0.5 1</specular>
+          <pbr><metal><metalness>0.0</metalness><roughness>0.5</roughness></metal></pbr></material></visual>
+      <visual name="bras2"><pose>-0.135 0.135 0.005 0 0 2.3562</pose><geometry><box><size>0.382 0.032 0.022</size></box></geometry><material><ambient>0.14 0.15 0.17 1</ambient><diffuse>0.14 0.15 0.17 1</diffuse><specular>0.5 0.5 0.5 1</specular>
+          <pbr><metal><metalness>0.4</metalness><roughness>0.4</roughness></metal></pbr></material></visual>
+      <visual name="moteur2"><pose>-0.27 0.27 0.02 0 0 0</pose><geometry><cylinder><radius>0.032</radius><length>0.05</length></cylinder></geometry><material><ambient>0.64 0.14 0.37 1</ambient><diffuse>0.64 0.14 0.37 1</diffuse><specular>0.5 0.5 0.5 1</specular>
+          <pbr><metal><metalness>0.6</metalness><roughness>0.3</roughness></metal></pbr></material></visual>
+      <visual name="pied2"><pose>-0.216 0.216 -0.07 0 0 0</pose><geometry><cylinder><radius>0.007</radius><length>0.13</length></cylinder></geometry><material><ambient>0.1 0.1 0.1 1</ambient><diffuse>0.1 0.1 0.1 1</diffuse><specular>0.5 0.5 0.5 1</specular>
+          <pbr><metal><metalness>0.0</metalness><roughness>0.5</roughness></metal></pbr></material></visual>
+      <visual name="bras3"><pose>-0.135 -0.135 0.005 0 0 -2.3562</pose><geometry><box><size>0.382 0.032 0.022</size></box></geometry><material><ambient>0.14 0.15 0.17 1</ambient><diffuse>0.14 0.15 0.17 1</diffuse><specular>0.5 0.5 0.5 1</specular>
+          <pbr><metal><metalness>0.4</metalness><roughness>0.4</roughness></metal></pbr></material></visual>
+      <visual name="moteur3"><pose>-0.27 -0.27 0.02 0 0 0</pose><geometry><cylinder><radius>0.032</radius><length>0.05</length></cylinder></geometry><material><ambient>0.64 0.14 0.37 1</ambient><diffuse>0.64 0.14 0.37 1</diffuse><specular>0.5 0.5 0.5 1</specular>
+          <pbr><metal><metalness>0.6</metalness><roughness>0.3</roughness></metal></pbr></material></visual>
+      <visual name="pied3"><pose>-0.216 -0.216 -0.07 0 0 0</pose><geometry><cylinder><radius>0.007</radius><length>0.13</length></cylinder></geometry><material><ambient>0.1 0.1 0.1 1</ambient><diffuse>0.1 0.1 0.1 1</diffuse><specular>0.5 0.5 0.5 1</specular>
+          <pbr><metal><metalness>0.0</metalness><roughness>0.5</roughness></metal></pbr></material></visual>
+    <visual name="nacelle"><pose>0.04 0 -0.075 0 0 0</pose><geometry><box><size>0.07 0.06 0.04</size></box></geometry><material><ambient>0.1 0.11 0.13 1</ambient><diffuse>0.1 0.11 0.13 1</diffuse><specular>0.5 0.5 0.5 1</specular>
+          <pbr><metal><metalness>0.3</metalness><roughness>0.4</roughness></metal></pbr></material></visual>
+    <visual name="objectif"><pose>0.04 0 -0.105 0 0 0</pose><geometry><cylinder><radius>0.02</radius><length>0.03</length></cylinder></geometry><material><ambient>0.02 0.03 0.05 1</ambient><diffuse>0.02 0.03 0.05 1</diffuse><specular>0.5 0.5 0.5 1</specular>
+          <pbr><metal><metalness>0.9</metalness><roughness>0.1</roughness></metal></pbr></material></visual>
+    <sensor name="camera_nadir" type="camera">
+      <pose>0.04 0 -0.1 0 1.5708 0</pose>
+      <always_on>true</always_on><update_rate>5</update_rate><visualize>false</visualize>
+      <topic>drone/camera/image_raw</topic>
+      <camera><horizontal_fov>1.2</horizontal_fov>
+        <image><width>800</width><height>600</height><format>R8G8B8</format></image>
+        <clip><near>0.04</near><far>40</far></clip></camera>
+    </sensor>
+  </link>
+    <link name="helice0"><pose>0.27 0.27 0.05 0 0 0</pose><gravity>false</gravity>
+      <inertial><mass>0.01</mass><inertia><ixx>1e-5</ixx><iyy>1e-5</iyy><izz>2e-5</izz></inertia></inertial>
+      <visual name="pale_a"><geometry><box><size>0.25 0.022 0.004</size></box></geometry><material><ambient>0.08 0.08 0.09 1</ambient><diffuse>0.08 0.08 0.09 1</diffuse><specular>0.5 0.5 0.5 1</specular>
+          <pbr><metal><metalness>0.1</metalness><roughness>0.5</roughness></metal></pbr></material></visual>
+      <visual name="pale_b"><pose>0 0 0 0 0 1.5708</pose><geometry><box><size>0.25 0.022 0.004</size></box></geometry><material><ambient>0.08 0.08 0.09 1</ambient><diffuse>0.08 0.08 0.09 1</diffuse><specular>0.5 0.5 0.5 1</specular>
+          <pbr><metal><metalness>0.1</metalness><roughness>0.5</roughness></metal></pbr></material></visual>
+      <visual name="pointe"><pose>0.118 0 0.0 0 0 0</pose><geometry><box><size>0.02 0.024 0.0045</size></box></geometry><material><ambient>0.95 0.7 0.1 1</ambient><diffuse>0.95 0.7 0.1 1</diffuse><specular>0.5 0.5 0.5 1</specular>
+          <pbr><metal><metalness>0.0</metalness><roughness>0.5</roughness></metal></pbr></material></visual>
+    </link>
+    <joint name="axe0" type="revolute"><parent>base</parent><child>helice0</child><axis><xyz>0 0 1</xyz><limit><lower>-1e16</lower><upper>1e16</upper></limit><dynamics><damping>0</damping></dynamics></axis></joint>
+    <plugin filename="gz-sim-joint-controller-system" name="gz::sim::systems::JointController">
+      <joint_name>axe0</joint_name><use_velocity_commands>false</use_velocity_commands><initial_velocity>60</initial_velocity>
+    </plugin>
+    <link name="helice1"><pose>0.27 -0.27 0.05 0 0 0</pose><gravity>false</gravity>
+      <inertial><mass>0.01</mass><inertia><ixx>1e-5</ixx><iyy>1e-5</iyy><izz>2e-5</izz></inertia></inertial>
+      <visual name="pale_a"><geometry><box><size>0.25 0.022 0.004</size></box></geometry><material><ambient>0.08 0.08 0.09 1</ambient><diffuse>0.08 0.08 0.09 1</diffuse><specular>0.5 0.5 0.5 1</specular>
+          <pbr><metal><metalness>0.1</metalness><roughness>0.5</roughness></metal></pbr></material></visual>
+      <visual name="pale_b"><pose>0 0 0 0 0 1.5708</pose><geometry><box><size>0.25 0.022 0.004</size></box></geometry><material><ambient>0.08 0.08 0.09 1</ambient><diffuse>0.08 0.08 0.09 1</diffuse><specular>0.5 0.5 0.5 1</specular>
+          <pbr><metal><metalness>0.1</metalness><roughness>0.5</roughness></metal></pbr></material></visual>
+      <visual name="pointe"><pose>0.118 0 0.0 0 0 0</pose><geometry><box><size>0.02 0.024 0.0045</size></box></geometry><material><ambient>0.95 0.7 0.1 1</ambient><diffuse>0.95 0.7 0.1 1</diffuse><specular>0.5 0.5 0.5 1</specular>
+          <pbr><metal><metalness>0.0</metalness><roughness>0.5</roughness></metal></pbr></material></visual>
+    </link>
+    <joint name="axe1" type="revolute"><parent>base</parent><child>helice1</child><axis><xyz>0 0 1</xyz><limit><lower>-1e16</lower><upper>1e16</upper></limit><dynamics><damping>0</damping></dynamics></axis></joint>
+    <plugin filename="gz-sim-joint-controller-system" name="gz::sim::systems::JointController">
+      <joint_name>axe1</joint_name><use_velocity_commands>false</use_velocity_commands><initial_velocity>-60</initial_velocity>
+    </plugin>
+    <link name="helice2"><pose>-0.27 0.27 0.05 0 0 0</pose><gravity>false</gravity>
+      <inertial><mass>0.01</mass><inertia><ixx>1e-5</ixx><iyy>1e-5</iyy><izz>2e-5</izz></inertia></inertial>
+      <visual name="pale_a"><geometry><box><size>0.25 0.022 0.004</size></box></geometry><material><ambient>0.08 0.08 0.09 1</ambient><diffuse>0.08 0.08 0.09 1</diffuse><specular>0.5 0.5 0.5 1</specular>
+          <pbr><metal><metalness>0.1</metalness><roughness>0.5</roughness></metal></pbr></material></visual>
+      <visual name="pale_b"><pose>0 0 0 0 0 1.5708</pose><geometry><box><size>0.25 0.022 0.004</size></box></geometry><material><ambient>0.08 0.08 0.09 1</ambient><diffuse>0.08 0.08 0.09 1</diffuse><specular>0.5 0.5 0.5 1</specular>
+          <pbr><metal><metalness>0.1</metalness><roughness>0.5</roughness></metal></pbr></material></visual>
+      <visual name="pointe"><pose>0.118 0 0.0 0 0 0</pose><geometry><box><size>0.02 0.024 0.0045</size></box></geometry><material><ambient>0.95 0.7 0.1 1</ambient><diffuse>0.95 0.7 0.1 1</diffuse><specular>0.5 0.5 0.5 1</specular>
+          <pbr><metal><metalness>0.0</metalness><roughness>0.5</roughness></metal></pbr></material></visual>
+    </link>
+    <joint name="axe2" type="revolute"><parent>base</parent><child>helice2</child><axis><xyz>0 0 1</xyz><limit><lower>-1e16</lower><upper>1e16</upper></limit><dynamics><damping>0</damping></dynamics></axis></joint>
+    <plugin filename="gz-sim-joint-controller-system" name="gz::sim::systems::JointController">
+      <joint_name>axe2</joint_name><use_velocity_commands>false</use_velocity_commands><initial_velocity>-60</initial_velocity>
+    </plugin>
+    <link name="helice3"><pose>-0.27 -0.27 0.05 0 0 0</pose><gravity>false</gravity>
+      <inertial><mass>0.01</mass><inertia><ixx>1e-5</ixx><iyy>1e-5</iyy><izz>2e-5</izz></inertia></inertial>
+      <visual name="pale_a"><geometry><box><size>0.25 0.022 0.004</size></box></geometry><material><ambient>0.08 0.08 0.09 1</ambient><diffuse>0.08 0.08 0.09 1</diffuse><specular>0.5 0.5 0.5 1</specular>
+          <pbr><metal><metalness>0.1</metalness><roughness>0.5</roughness></metal></pbr></material></visual>
+      <visual name="pale_b"><pose>0 0 0 0 0 1.5708</pose><geometry><box><size>0.25 0.022 0.004</size></box></geometry><material><ambient>0.08 0.08 0.09 1</ambient><diffuse>0.08 0.08 0.09 1</diffuse><specular>0.5 0.5 0.5 1</specular>
+          <pbr><metal><metalness>0.1</metalness><roughness>0.5</roughness></metal></pbr></material></visual>
+      <visual name="pointe"><pose>0.118 0 0.0 0 0 0</pose><geometry><box><size>0.02 0.024 0.0045</size></box></geometry><material><ambient>0.95 0.7 0.1 1</ambient><diffuse>0.95 0.7 0.1 1</diffuse><specular>0.5 0.5 0.5 1</specular>
+          <pbr><metal><metalness>0.0</metalness><roughness>0.5</roughness></metal></pbr></material></visual>
+    </link>
+    <joint name="axe3" type="revolute"><parent>base</parent><child>helice3</child><axis><xyz>0 0 1</xyz><limit><lower>-1e16</lower><upper>1e16</upper></limit><dynamics><damping>0</damping></dynamics></axis></joint>
+    <plugin filename="gz-sim-joint-controller-system" name="gz::sim::systems::JointController">
+      <joint_name>axe3</joint_name><use_velocity_commands>false</use_velocity_commands><initial_velocity>60</initial_velocity>
+    </plugin>
+  <plugin filename="gz-sim-velocity-control-system" name="gz::sim::systems::VelocityControl"/>
+  <plugin filename="gz-sim-odometry-publisher-system" name="gz::sim::systems::OdometryPublisher">
+    <dimensions>3</dimensions><odom_frame>world</odom_frame><robot_base_frame>drone_agri</robot_base_frame><odom_publish_frequency>20</odom_publish_frequency>
+  </plugin>
+</model>
+</sdf>

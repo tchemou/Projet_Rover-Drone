@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<sdf version="1.8">
+<model name="haie">
+<static>true</static>
+<link name="link"><collision name="c"><pose>0 0 0.6 0 0 0</pose><geometry><box><size>20 0.9 1.2</size></box></geometry></collision><visual name="haie"><pose>0 0 0 0 0 0</pose><cast_shadows>true</cast_shadows><geometry><mesh><uri>model://haie/meshes/haie.obj</uri></mesh></geometry><material><ambient>1 1 1 1</ambient><diffuse>1 1 1 1</diffuse><specular>0.05 0.05 0.05 1</specular><pbr><metal><albedo_map>model://haie/meshes/feuillage.png</albedo_map><roughness>0.95</roughness><metalness>0</metalness></metal></pbr></material></visual></link>
+</model>
+</sdf>
