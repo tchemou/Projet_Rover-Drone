@@ -165,3 +165,69 @@ def plants_rover(bgr, zone_utile=0.30, aire_min=70):
         det.append(dict(u=float(cen[i][0]), u0=int(x), u1=int(x + bw), v=float(cen[i][1] + y0), w=int(bw), h=int(bh),
                         score=float(min(0.99, 0.5 + aire / 1500.0))))
     return det
+
+
+# ----------------------------------------------------------------------------------------------
+# Caméras latérales de la sonde (gros plan sur le plant à traiter)
+# ----------------------------------------------------------------------------------------------
+def gros_plan(bgr, sat_min=70):
+    """Part de l'image occupée par du feuillage jauni (symptômes) et colonne moyenne de ces pixels.
+
+    Retourne (fraction 0..1, colonne ou -1). Un plant atteint occupe 10 à 25 % de l'image, un plant sain ~0,3 %.
+    """
+    hsv = cv2.cvtColor(bgr, cv2.COLOR_BGR2HSV)
+    m = cv2.inRange(hsv, (22, sat_min, 50), (44, 255, 255))
+    m = cv2.morphologyEx(m, cv2.MORPH_OPEN, cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (3, 3)))
+    m[:int(0.12 * bgr.shape[0])] = 0                       # on ignore le ciel en haut de l'image
+    ys, xs = np.nonzero(m)
+    return float(m.mean() / 255.0), (float(xs.mean()) if len(xs) else -1.0)
+
+
+# ----------------------------------------------------------------------------------------------
+# Détection aérienne par réseau de neurones : la végétation est segmentée pour trouver les plants,
+# puis chaque plant est classé « sain / atteint » par le réseau (classifieur.py).
+# ----------------------------------------------------------------------------------------------
+VEGETATION = ((22, 60, 35), (88, 255, 255))
+AIRE_PLANT_VEG_M2 = 0.10                               # surface moyenne du feuillage d'un plant vu du dessus
+
+
+def centres_vegetation(bgr, m_par_px):
+    """Centres (u, v) des plants : composantes de végétation, séparées par k-moyennes si plusieurs plants se touchent."""
+    hsv = cv2.cvtColor(bgr, cv2.COLOR_BGR2HSV)
+    veg = cv2.inRange(hsv, *VEGETATION)
+    veg = cv2.morphologyEx(veg, cv2.MORPH_CLOSE, cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (5, 5)))
+    veg = cv2.morphologyEx(veg, cv2.MORPH_OPEN, cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (3, 3)))
+    n, lab, st, cen = cv2.connectedComponentsWithStats(veg)
+    out = []
+    for i in range(1, n):
+        aire = st[i, 4] * m_par_px ** 2
+        if aire < 0.03:
+            continue
+        nb = max(1, int(round(aire / AIRE_PLANT_VEG_M2)))
+        if nb == 1:
+            out.append((float(cen[i][0]), float(cen[i][1])))
+        else:
+            ys, xs = np.nonzero(lab == i)
+            pts = np.float32(np.c_[xs, ys])
+            crit = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 30, 0.5)
+            _, _, centres = cv2.kmeans(pts, nb, None, crit, 3, cv2.KMEANS_PP_CENTERS)
+            out += [(float(c[0]), float(c[1])) for c in centres]
+    return out
+
+
+def plants_aerien_ia(bgr, m_par_px, clf, seuil=0.5, cote_m=0.64):
+    """Plants atteints d'une vue du dessus : dict(u, v, classe='malade', score) en pixels."""
+    h, w = bgr.shape[:2]
+    petit = cv2.resize(bgr, (w // 2, h // 2), interpolation=cv2.INTER_AREA)
+    centres = [(u * 2, v * 2) for u, v in centres_vegetation(petit, m_par_px * 2)]
+    r = max(24, int(cote_m / (2 * m_par_px)))
+    recadrages, pos = [], []
+    for u, v in centres:
+        if r <= u < w - r and r <= v < h - r:
+            recadrages.append(bgr[int(v) - r:int(v) + r, int(u) - r:int(u) + r])
+            pos.append((u, v))
+    det = []
+    for (u, v), p in zip(pos, clf.probabilites(recadrages)):
+        if p >= seuil:
+            det.append(dict(u=u, v=v, classe='malade', score=float(p)))
+    return det

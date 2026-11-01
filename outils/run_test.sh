@@ -1,4 +1,5 @@
 #!/bin/bash
+ulimit -c 0   # pas de copie mémoire (core dump) : elles remplissaient le disque Windows
 # usage: run_test.sh <mode> <duree_max_s>
 source /opt/ros/jazzy/setup.bash
 source ~/turtlebot3_ws/install/setup.bash
@@ -6,12 +7,12 @@ export TURTLEBOT3_MODEL=waffle
 export GALLIUM_DRIVER=d3d12 MESA_D3D12_DEFAULT_ADAPTER_NAME=NVIDIA
 MODE=${1:-normal}; MAX=${2:-420}
 mkdir -p ~/audit && cd ~/audit
-pkill -f gz; pkill -f ros2; sleep 2
+pkill -9 -f "[g]z sim"; pkill -f "[r]os2 "; sleep 2
 (ros2 launch agri_sim complet.launch.py gui:=false > run.log 2>&1 &)
 sleep 30
 ros2 topic pub -t 4 -r 2 /vigie/commande std_msgs/msg/String "{data: 'mode:$MODE'}" > /dev/null
 sleep 1
-ros2 topic pub -1 /vigie/commande std_msgs/msg/String "{data: 'demarrer'}" > /dev/null
+ros2 topic pub -t 5 -r 2 /vigie/commande std_msgs/msg/String "{data: 'demarrer'}" > /dev/null
 T0=$(date +%s)
 while true; do
   sleep 15
@@ -43,4 +44,4 @@ while 'b' not in d and time.time()-t<4: rclpy.spin_once(n,timeout_sec=0.3)
 print('BILAN_FINAL', json.dumps(d.get('b'),ensure_ascii=False,indent=1))
 PY
 grep -E "Jet|WARN|ERROR|Relevé|Traitement|Mission|confirm" run.log | tail -40
-pkill -f gz; pkill -f ros2; pkill -f parameter_bridge; pkill -f robot_state; true
+pkill -9 -f "[g]z sim"; pkill -f "[r]os2 "; pkill -f parameter_bridge; pkill -f robot_state; true

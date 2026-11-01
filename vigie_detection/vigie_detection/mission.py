@@ -18,20 +18,25 @@ import json
 import math
 import time
 
+import cv2  # noqa: F401  (utilisé via cv_bridge)
 import rclpy
+from cv_bridge import CvBridge
 from geometry_msgs.msg import Twist, TwistStamped
 from nav_msgs.msg import Odometry
 from rclpy.node import Node
 from rclpy.qos import qos_profile_sensor_data
-from sensor_msgs.msg import LaserScan
+from sensor_msgs.msg import Image, LaserScan
 from std_msgs.msg import String
 
+from .analyse import gros_plan
 from .marqueurs import Marqueurs
-from .outils import ALLEES, DOSE_PLANT_L, SPAWN, X_BOUT, angle_norm, yaw_de
+from .outils import ALLEES, DOSE_PLANT_L, ROWS, SPAWN, X_BOUT, angle_norm, dans_champ, yaw_de
 
 ALLEES_RELEVE = [-2.7, -1.5, -0.3, 0.9, 2.1, 2.7]       # allées parcourues en mode dégradé
 PORTEE_SONDE = (0.10, 0.50)                            # sortie latérale de la sonde (m)
 COURSE_SONDE = 0.15                                     # débattement longitudinal de la sonde (m)
+SEUIL_SONDE = 0.03                                      # part d'image jaunie au-delà de laquelle le plant est jugé atteint
+LAT_LARGEUR, LAT_FOV, LAT_PROFONDEUR = 320, 1.8, 0.17  # caméras latérales : image, champ (rad), distance au feuillage (m)
 
 
 def nav(x, y, tol=0.12, **kw):
@@ -49,6 +54,7 @@ class Mission(Node):
         self.declare_parameter("timeout_drone", 900.0)
         self.declare_parameter('marqueurs', True)
         self.declare_parameter('demarrage_auto', False)
+        self.declare_parameter('sonde_camera', True)           # vérification et recalage par les caméras de la sonde
         self.mark = Marqueurs(self.get_logger(), self.get_parameter('marqueurs').value)
 
         self.phase = 'attente'
@@ -80,8 +86,15 @@ class Mission(Node):
         self.t_drone = 0.0                     # dernier message reçu du drone
         self.vues_rover = {}
         self.nb_jets = 0
+        self.lat = {}                          # dernière image de chaque caméra latérale : (instant, message)
+        self.pont = CvBridge()
+        self.essais_sonde = 0
+        self.recal = None
+        self.nb_extra = 0
+        self.jets_xy = []                      # pointes des jets déjà tirés
+        self.nb_voisins = 0
 
-        self.pub =self.create_publisher(TwistStamped, '/cmd_vel', 10)
+        self.pub = self.create_publisher(TwistStamped, '/cmd_vel', 10)
         self.pub_etat = self.create_publisher(String, '/vigie/mission', 10)
         self.pub_spray = self.create_publisher(String, '/vigie/pulverisation', 10)
         self.create_subscription(Odometry, '/odom', self.on_odom, 10)
@@ -93,6 +106,8 @@ class Mission(Node):
         self.create_subscription(String, '/vigie/drone/zones', lambda m: setattr(self, 'zones_drone', json.loads(m.data)), 10)
         self.create_subscription(String, '/vigie/drone/etat', self.on_drone_etat, 10)
         self.create_subscription(String, '/vigie/rover/vue', self.on_vue, 10)
+        self.create_subscription(Image, '/rover/cam_gauche/image_raw', lambda im: self.lat.__setitem__(1, (time.monotonic(), im)), qos_profile_sensor_data)
+        self.create_subscription(Image, '/rover/cam_droite/image_raw', lambda im: self.lat.__setitem__(-1, (time.monotonic(), im)), qos_profile_sensor_data)
         self.create_timer(0.05, self.boucle)
         self.create_timer(0.2, self.publier)
         if self.get_parameter('demarrage_auto').value:
@@ -207,6 +222,7 @@ class Mission(Node):
         self.cibles, self.route, self.litres, self.dist = [], [], 0.0, 0.0
         self.nb_jets = 0
         self.vues_rover = {}
+        self.jets_xy, self.nb_voisins, self.nb_extra = [], 0, 0
         self.pause = False
         self.controle = 'auto'
         self.etape = None
@@ -240,12 +256,22 @@ class Mission(Node):
         return out
 
     def cibles_depuis_rover(self):
-        out = []
+        """Foyers repérés par le rover seul : au moins 5 observations, ancrés sur les rangs et la grille de plantation
+        (rangs tous les 0,6 m, plants tous les 0,4 m), doublons fusionnés. Les caméras de la sonde confirment ensuite."""
+        noeuds = {}
         for k, v in self.vues_rover.items():
-            if v['n'] >= 3:
-                out.append({'id': 1000 + k, 'x': round(v['x'], 3), 'y': round(v['y'], 3), 'classe': v['classe'],
-                            'score': v['score'], 'source': 'rover', 'etat': 'a_traiter', 'mk': f'mk_det_r{k}'})
-                self.mark.anneau(f'mk_det_r{k}', v['x'], v['y'], 'rouge', 0.2)
+            if v['n'] < 5:
+                continue
+            rang = min(ROWS, key=lambda r: abs(r - v['y']))
+            if abs(rang - v['y']) > 0.3 or not dans_champ(v['x'], rang, 0.3):
+                continue
+            xn = max(-6.0, min(6.0, round((v['x'] + 6.0) / 0.4) * 0.4 - 6.0))
+            noeuds.setdefault((round(xn, 1), round(rang, 1)), (xn, rang, v))
+        out = []
+        for n, (xn, rang, v) in enumerate(sorted(noeuds.values(), key=lambda t: (t[1], t[0])), 1):
+            out.append({'id': 1000 + n, 'x': round(xn, 3), 'y': round(rang, 3), 'classe': v['classe'], 'score': v['score'],
+                        'source': 'rover', 'etat': 'a_traiter', 'mk': f'mk_det_r{n}'})
+            self.mark.anneau(f'mk_det_r{n}', xn, rang, 'rouge', 0.2)
         return out
 
     def valider(self, ident):
@@ -310,7 +336,7 @@ class Mission(Node):
             stops = sorted(groupes[a], key=lambda t: t['x'] * d)
             derniere = None
             for t in stops:
-                if derniere is None or abs(t['x'] - derniere) > 1.3:
+                if (derniere is None or abs(t['x'] - derniere) > 1.3) and not self.get_parameter('sonde_camera').value:
                     r.append(dict(p=(max(-X_BOUT, min(X_BOUT, t['x'] - d * 1.0)), a), type='confirmer', cible=t['id']))
                 r.append(dict(p=(t['x'], a), type='pulveriser', cible=t['id']))
                 derniere = t['x']
@@ -478,24 +504,133 @@ class Mission(Node):
             self.route.pop(0)
             self.etape = None
             return
+        now = time.monotonic()
         if self.sous == 'aller':
             self.etat_txt = f"positionnement sur le plant {cible['id']}"
             if self.aller_a(etape['p'], min(vmax, 0.3), 0.03):
-                self.sous, self.t_etape = 'viser', time.monotonic()
+                self.sous, self.t_etape, self.essais_sonde = 'viser', now, 0
+        elif self.sous == 'recaler':
+            self.etat_txt = f"recalage de la sonde · plant {cible['id']}"
+            x, y, yaw = self.pose
+            e = 0.0 if self.recal is None else (self.recal[0] - x) * math.cos(yaw) + (self.recal[1] - y) * math.sin(yaw)
+            if abs(e) < 0.012 or now - self.t_etape > 4.0 + abs(e) / 0.04:       # centré (ou délai dépassé) : on mesure à nouveau
+                self.envoyer(0.0, 0.0)
+                self.sous, self.t_etape = 'viser', now
+            else:                                                 # avance ou recule lentement le long de l'allée
+                self.commander(math.copysign(max(0.03, min(0.14, 2.0 * abs(e))), e), 0.0)
         elif self.sous == 'viser':
             self.envoyer(0.0, 0.0)
             self.etat_txt = f"visée de la sonde · plant {cible['id']}"
-            if time.monotonic() - self.t_etape > 0.5 and abs(self.vit) < 0.02:
+            if now - self.t_etape < 0.6 or abs(self.vit) > 0.02:
+                return
+            if not self.get_parameter('sonde_camera').value:
                 self.tirer(cible)
-                self.sous, self.t_etape = 'jet', time.monotonic()
+                self.sous, self.t_etape = 'jet', now
+                return
+            res = self.mesure_sonde(self.cote_de(cible))
+            if res is None:
+                if now - self.t_etape > 3.0:                       # pas d'image de la sonde : on tire sans vérification
+                    self.get_logger().warn('Caméra de la sonde muette : jet sans vérification')
+                    self.tirer(cible)
+                    self.sous, self.t_etape = 'jet', now
+                return
+            if res['frac'] < SEUIL_SONDE:                          # pas de symptôme sous la sonde : aucun jet
+                cible['etat'] = 'rejete'
+                self.mark.retirer(cible['mk'])
+                self.mark.retirer(cible['mk'] + '_f')
+                self.get_logger().warn(f"Plant {cible['id']} : la caméra de la sonde ne voit aucun symptôme, pas de jet")
+                if cible.get('source') in ('rover', 'drone'):          # position estimée peut-être décalée d'un plant
+                    self.verifier_voisins(cible, etape)
+                self.route.pop(0)
+                self.etape = None
+                return
+            yaw = self.pose[2]
+            if abs(res['dx']) > 0.02 and self.essais_sonde < 4:   # plant décentré : on recale le rover le long de l'allée
+                self.essais_sonde += 1
+                self.recal = (self.pose[0] + res['dx'] * math.cos(yaw), self.pose[1] + res['dx'] * math.sin(yaw))
+                self.sous, self.t_etape = 'recaler', now
+                return
+            cible['x'] = round(self.pose[0] + res['dx'] * math.cos(yaw), 3)      # position mesurée du plant
+            cible['verifie'] = True
+            if cible.get('source') == 'voisin':
+                self.mark.anneau(cible['mk'], cible['x'], cible['y'], 'rouge', 0.2)
+            self.plant_oppose(cible, etape)
+            self.tirer(cible)
+            self.sous, self.t_etape = 'jet', now
         else:
             self.envoyer(0.0, 0.0)
             self.etat_txt = f"pulvérisation · plant {cible['id']}"
-            if time.monotonic() - self.t_etape > self.get_parameter('duree_pulverisation').value:
+            if now - self.t_etape > self.get_parameter('duree_pulverisation').value:
                 cible['etat'] = 'traite'
                 self.mark.remplacer_anneau(cible['mk'], f"mk_trt_{cible['id']}", cible['x'], cible['y'], 'vert', 0.22)
+                for ex in self.cibles:                                # cible déjà prévue au même endroit : traitée du même coup
+                    if ex is not cible and ex['etat'] in ('a_traiter', 'valide') and math.hypot(ex['x'] - cible['x'], ex['y'] - cible['y']) < 0.22:
+                        ex['etat'] = 'traite'
+                        self.mark.remplacer_anneau(ex['mk'], f"mk_trt_{ex['id']}", ex['x'], ex['y'], 'vert', 0.22)
+                self.verifier_voisins(cible, etape)
                 self.route.pop(0)
                 self.etape = None
+
+    def verifier_voisins(self, cible, etape):
+        """Suit le foyer : ajoute à la route les deux plants voisins du même rang (±0,4 m), qui ne seront traités que si
+        la caméra de la sonde y voit des symptômes. S'arrête de lui-même au bord du foyer."""
+        if self.nb_voisins > 60:                                  # garde-fou
+            return
+        a = etape['p'][1]
+        n_ajoutes = 0
+        for sgn in (1, -1):
+            nx = round(cible['x'] + sgn * 0.4, 3)
+            if abs(nx) > 6.3:
+                continue
+            if any(math.hypot(jx - nx, jy - cible['y']) < 0.2 for jx, jy in self.jets_xy):
+                continue
+            if any(math.hypot(c['x'] - nx, c['y'] - cible['y']) < 0.2 for c in self.cibles):
+                continue
+            self.nb_voisins += 1
+            self.nb_extra += 1
+            nid = 2000 + self.nb_extra
+            self.cibles.append({'id': nid, 'x': nx, 'y': cible['y'], 'classe': 'malade', 'score': 0.7, 'source': 'voisin',
+                                'etat': 'a_traiter', 'mk': f'mk_det_v{self.nb_extra}'})
+            self.route.insert(1 + n_ajoutes, dict(p=(nx, a), type='pulveriser', cible=nid))
+            n_ajoutes += 1
+
+    def cote_de(self, cible):
+        """+1 : le plant est à gauche du rover, -1 : à droite."""
+        x, y, yaw = self.pose
+        lat = -math.sin(yaw) * (cible['x'] - x) + math.cos(yaw) * (cible['y'] - y)
+        return 1 if lat >= 0 else -1
+
+    def mesure_sonde(self, cote):
+        """Gros plan de la caméra latérale : part de feuillage jauni et décalage du plant le long de l'allée (m, + = devant)."""
+        t_img = self.lat.get(cote)
+        if not t_img or t_img[0] < self.t_etape + 0.35 or time.monotonic() - t_img[0] > 1.0:
+            return None                                              # image trop ancienne (prise avant l'arrêt) ou absente
+        img = self.pont.imgmsg_to_cv2(t_img[1], 'bgr8')
+        frac, u = gros_plan(img)
+        f = (LAT_LARGEUR / 2) / math.tan(LAT_FOV / 2)
+        dx = 0.0 if u < 0 else LAT_PROFONDEUR * (u - LAT_LARGEUR / 2) / f
+        return {'frac': frac, 'dx': dx if cote > 0 else -dx}         # caméra gauche : droite de l'image = avant du rover
+
+    def plant_oppose(self, cible, etape):
+        """Le plant de l'autre côté de l'allée est-il atteint aussi ? Si oui, on le traite à ce même arrêt (sonde bilatérale)."""
+        cote = -self.cote_de(cible)
+        res = self.mesure_sonde(cote)
+        if res is None or res['frac'] < SEUIL_SONDE:
+            return
+        x, y, yaw = self.pose
+        px = x + res['dx'] * math.cos(yaw)
+        py = min(ROWS, key=lambda r: abs(r - (y + cote * 0.3)))
+        for ex in self.cibles:
+            if ex['etat'] == 'traite' and math.hypot(ex['x'] - px, ex['y'] - py) < 0.22:
+                return
+        self.nb_extra += 1
+        nid = 2000 + self.nb_extra
+        nouveau = {'id': nid, 'x': round(px, 3), 'y': round(py, 3), 'classe': 'malade', 'score': 0.8, 'source': 'sonde',
+                   'etat': 'a_traiter', 'mk': f'mk_det_s{self.nb_extra}', 'verifie': True}
+        self.cibles.append(nouveau)
+        self.mark.anneau(nouveau['mk'], px, py, 'rouge', 0.2)
+        self.route.insert(1, dict(p=(x, etape['p'][1]), type='pulveriser', cible=nid))
+        self.get_logger().info(f'Plant malade aussi de l’autre côté (n°{nid}) : traité à ce même arrêt')
 
     def tirer(self, cible):
         """La sonde latérale se place sur le plant ; le jet part de la buse."""
@@ -515,6 +650,7 @@ class Mission(Node):
         msg = {'n': self.nb_jets, 'cible': cible['id'], 'x': round(tx, 3), 'y': round(ty, 3),
                'litres': DOSE_PLANT_L, 'source': cible.get('source'), 'classe': cible['classe']}
         self.pub_spray.publish(String(data=json.dumps(msg)))
+        self.jets_xy.append((tx, ty))
         self.get_logger().info(f"Jet sur le plant {cible['id']} ({cible['classe']}) · pointe à ({tx:.2f}, {ty:.2f})")
 
     def fin_de_route(self):

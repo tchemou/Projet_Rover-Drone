@@ -24,7 +24,8 @@ from rclpy.qos import qos_profile_sensor_data
 from sensor_msgs.msg import CompressedImage, Image
 from std_msgs.msg import String
 
-from .analyse import annoter_aerien, plants_aerien
+from .analyse import annoter_aerien, plants_aerien, plants_aerien_ia
+from .classifieur import Classifieur
 from .marqueurs import Marqueurs
 from .outils import AIRE_DRONE, CHAMP, dans_champ
 
@@ -46,10 +47,17 @@ class Drone(Node):
         self.declare_parameter('x_fin', 6.8)
         self.declare_parameter('marqueurs', True)
         self.declare_parameter('vues_min', 3)
+        self.declare_parameter('ia', True)                     # classification par réseau de neurones (sinon seuillage de couleur)
+        self.declare_parameter('seuil_ia', 0.5)
         self.alt = self.get_parameter('altitude').value
         self.vmax = self.get_parameter('vitesse').value
         self.bridge = CvBridge()
         self.mark = Marqueurs(self.get_logger(), self.get_parameter('marqueurs').value)
+        self.clf = Classifieur() if self.get_parameter('ia').value else None
+        if self.clf is not None and self.clf.pret:
+            self.get_logger().info(f'Détection par réseau de neurones : {self.clf.chemin}')
+        else:
+            self.get_logger().warn('Pas de modèle IA : détection par seuillage de couleur')
 
         self.odom = deque(maxlen=200)         # (t, x, y, z)
         self.pose = None
@@ -218,11 +226,14 @@ class Drone(Node):
         img = self.bridge.imgmsg_to_cv2(msg, desired_encoding='bgr8')
         self.nb_images += 1
         # analyse sur une image réduite de moitié (13 mm par pixel : un plant fait encore 25 pixels)
-        petit = cv2.resize(img, (LARGEUR_PX // 2, HAUTEUR_PX // 2), interpolation=cv2.INTER_AREA)
-        det = plants_aerien(petit, s * 2)
-        for d in det:
-            d['u'] *= 2
-            d['v'] *= 2
+        if self.clf is not None and self.clf.pret:
+            det = plants_aerien_ia(img, s, self.clf, self.get_parameter('seuil_ia').value)
+        else:
+            petit = cv2.resize(img, (LARGEUR_PX // 2, HAUTEUR_PX // 2), interpolation=cv2.INTER_AREA)
+            det = plants_aerien(petit, s * 2)
+            for d in det:
+                d['u'] *= 2
+                d['v'] *= 2
         cx, cy = LARGEUR_PX / 2, HAUTEUR_PX / 2
         gardes = []
         for d in det:

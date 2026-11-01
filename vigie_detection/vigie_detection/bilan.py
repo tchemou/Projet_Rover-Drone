@@ -135,6 +135,7 @@ class Bilan(Node):
                 err.append(d * 100)
             else:
                 faux += 1
+        couverts = sum(1 for p in self.malades if any(math.hypot(s['x'] - p['x'], s['y'] - p['y']) <= 0.12 for s in self.sprays))
         litres = sum(s.get('litres', 0) for s in self.sprays)
         plein = litres_plein_champ()
         err_s = sorted(err)
@@ -142,6 +143,7 @@ class Bilan(Node):
                 'erreur_moyenne_cm': round(sum(err) / len(err), 1) if err else None,
                 'erreur_max_cm': round(err_s[-1], 1) if err else None,
                 'dans_10cm': round(100 * sum(1 for e in err if e <= 10) / max(1, len(err)), 1),
+                'plants_couverts': couverts, 'couverture_traitement': round(100 * couverts / max(1, len(self.malades)), 1),
                 'litres': round(litres, 3), 'litres_plein_champ': round(plein, 2),
                 'economie': round(100 * (1 - litres / plein), 1)}
 

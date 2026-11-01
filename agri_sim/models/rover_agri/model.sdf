@@ -57,6 +57,19 @@
 <visual name="gyrophare"><pose>0.06 0 0.215 0 0 0</pose><geometry><cylinder><radius>0.018</radius><length>0.035</length></cylinder></geometry><material><ambient>1 0.55 0.1 1</ambient><diffuse>1 0.55 0.1 1</diffuse><emissive>1 0.45 0.05 1</emissive><pbr><metal><metalness>0</metalness><roughness>0.3</roughness></metal></pbr></material></visual>
 <visual name="mat_antenne"><pose>-0.12 0.1 0.2 0 0 0</pose><geometry><cylinder><radius>0.004</radius><length>0.13</length></cylinder></geometry><material><ambient>0.1 0.1 0.1 1</ambient><diffuse>0.1 0.1 0.1 1</diffuse><pbr><metal><metalness>0.0</metalness><roughness>0.5</roughness></metal></pbr></material></visual>
 <visual name="antenne_gnss"><pose>-0.12 0.1 0.268 0 0 0</pose><geometry><cylinder><radius>0.022</radius><length>0.012</length></cylinder></geometry><material><ambient>0.9 0.9 0.92 1</ambient><diffuse>0.9 0.9 0.92 1</diffuse><pbr><metal><metalness>0.2</metalness><roughness>0.3</roughness></metal></pbr></material></visual>
+    
+      <sensor name="cam_gauche" type="camera">
+        <pose>0.04 0.13 0.15 0 0.35 1.5708</pose>
+        <always_on>true</always_on><update_rate>10</update_rate><visualize>false</visualize>
+        <topic>rover/cam_gauche/image_raw</topic>
+        <camera><horizontal_fov>1.8</horizontal_fov><image><width>320</width><height>240</height><format>R8G8B8</format></image><clip><near>0.02</near><far>3</far></clip></camera>
+      </sensor>
+      <sensor name="cam_droite" type="camera">
+        <pose>0.04 -0.13 0.15 0 0.35 -1.5708</pose>
+        <always_on>true</always_on><update_rate>10</update_rate><visualize>false</visualize>
+        <topic>rover/cam_droite/image_raw</topic>
+        <camera><horizontal_fov>1.8</horizontal_fov><image><width>320</width><height>240</height><format>R8G8B8</format></image><clip><near>0.02</near><far>3</far></clip></camera>
+      </sensor>
     </link>
 
     <link name="imu_link">

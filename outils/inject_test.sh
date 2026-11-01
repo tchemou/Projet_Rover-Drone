@@ -1,9 +1,10 @@
 #!/bin/bash
+ulimit -c 0   # pas de copie mémoire (core dump) : elles remplissaient le disque Windows
 source /opt/ros/jazzy/setup.bash
 source ~/turtlebot3_ws/install/setup.bash
 export TURTLEBOT3_MODEL=waffle
 MAX=${1:-400}
-cd ~/audit; pkill -f gz; pkill -f ros2; sleep 2
+cd ~/audit; pkill -9 -f "[g]z sim"; pkill -f "[r]os2 "; sleep 2
 (ros2 launch agri_sim complet.launch.py gui:=false noeuds:=false > inj.log 2>&1 &)
 sleep 26
 (ros2 run vigie_detection detecteur > inj_det.log 2>&1 &)
@@ -58,4 +59,4 @@ print('BILAN', json.dumps(d.get('b'),ensure_ascii=False))
 PY
 echo '--- EVENEMENTS'; cat ~/audit/events.log
 grep -vE "Jet sur" inj_mis.log | tail -25 | cut -c1-250
-pkill -f gz; pkill -f ros2; pkill -f inject.py; pkill -f events.py; pkill -f parameter_bridge; pkill -f robot_state; pkill -f vigie_detection; true
+pkill -9 -f "[g]z sim"; pkill -f "[r]os2 "; pkill -f inject.py; pkill -f events.py; pkill -f parameter_bridge; pkill -f robot_state; pkill -f vigie_detection; true

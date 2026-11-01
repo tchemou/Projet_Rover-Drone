@@ -36,7 +36,7 @@ def generate_launch_description():
              arguments=['--ros-args', '-p', f"config_file:={os.path.join(tb3, 'params', 'turtlebot3_waffle_bridge.yaml')}"]),
         Node(package='ros_gz_bridge', executable='parameter_bridge', output='screen', name='pont_gnss',
              arguments=['/rover/gnss@nav_msgs/msg/Odometry[gz.msgs.Odometry']),
-        Node(package='ros_gz_image', executable='image_bridge', output='screen', arguments=['/camera/image_raw']),
+        Node(package='ros_gz_image', executable='image_bridge', output='screen', arguments=['/camera/image_raw', '/rover/cam_gauche/image_raw', '/rover/cam_droite/image_raw']),
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource(os.path.join(tb3, 'launch', 'robot_state_publisher.launch.py')),
             launch_arguments={'use_sim_time': 'true'}.items()),
