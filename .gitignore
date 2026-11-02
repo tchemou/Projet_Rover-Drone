@@ -5,6 +5,7 @@
 !/agri_sim/
 !/vigie_detection/
 !/outils/
+!/docs/
 __pycache__/
 *.pyc
 *.egg-info/

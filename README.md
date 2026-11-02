@@ -4,6 +4,8 @@ Projet technique HEI4 / ISEN4 Robotique 2026-2027 (JUNIA) : détection et traite
 cercosporiose de la betterave sucrière par un drone (repérage) et un rover (confirmation, mesure, pulvérisation).
 Ce dépôt contient la **simulation complète** du semestre 7 (ROS 2 Jazzy, Gazebo Harmonic).
 
+![Détection dans Gazebo](docs/Capture_Gazebo_detection.png)
+
 ## Contenu
 
 | Dossier | Rôle |
@@ -85,3 +87,14 @@ Cause non encore élucidée (flou de mouvement, décalage de position ?).
 - Une tâche de fond lancée par `wsl ... &` meurt avec la commande WSL appelante.
 - Le port 8080 est parfois pris sur le PC Windows : la passerelle utilise 8420.
 - Gazebo tué par SIGTERM crée des copies mémoire de plusieurs Go (Temp\wsl-crashes) : `ulimit -c 0` et `pkill -9 -f "[g]z sim"`.
+
+## Modèle d'IA fourni
+
+`vigie_detection/ia/modele/modele_cercospora_sim.onnx` (45 Mo) : modèle final, à copier dans `~/ia/modele/` pour que les nœuds
+le trouvent (ou variable `VIGIE_MODELE`). Métriques : `metriques.json` (test public) et `metriques_sim.json` (adaptation à la simulation).
+`docs/Lancer_Simulation.bat` lance la simulation depuis Windows (WSL2 + ROS 2 Jazzy + Gazebo Harmonic requis).
+
+## Données et licences
+
+Jeu de données : PSNC « Cercospora leaf spot of sugar beet », Zenodo, licence CC-BY-4.0 (non redistribué ici ; `ia/telecharger_jeu.py`
+le télécharge). Le modèle de départ est un ResNet18 pré-entraîné sur ImageNet (torchvision).

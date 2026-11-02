@@ -1,0 +1,137 @@
+{
+ "test": {
+  "exactitude": 96.4,
+  "exactitude_equilibree": 97.7,
+  "rappel": {
+   "unaffected": 100.0,
+   "cercospora": 95.5
+  },
+  "precision": {
+   "unaffected": 84.4,
+   "cercospora": 100.0
+  },
+  "f1": {
+   "unaffected": 91.5,
+   "cercospora": 97.7
+  },
+  "matrice_confusion": [
+   [
+    27,
+    0
+   ],
+   [
+    5,
+    105
+   ]
+  ],
+  "ligne_de_base_toujours_malade": 80.3,
+  "n": 137
+ },
+ "validation": {
+  "exactitude": 97.1,
+  "exactitude_equilibree": 95.4,
+  "rappel": {
+   "unaffected": 92.6,
+   "cercospora": 98.2
+  },
+  "precision": {
+   "unaffected": 92.6,
+   "cercospora": 98.2
+  },
+  "f1": {
+   "unaffected": 92.6,
+   "cercospora": 98.2
+  },
+  "matrice_confusion": [
+   [
+    25,
+    2
+   ],
+   [
+    2,
+    108
+   ]
+  ],
+  "ligne_de_base_toujours_malade": 80.3,
+  "n": 137
+ },
+ "historique": [
+  {
+   "epoque": 1,
+   "perte": 0.5384,
+   "val_exactitude_equilibree": 90.8
+  },
+  {
+   "epoque": 2,
+   "perte": 0.2927,
+   "val_exactitude_equilibree": 84.9
+  },
+  {
+   "epoque": 3,
+   "perte": 0.3316,
+   "val_exactitude_equilibree": 87.6
+  },
+  {
+   "epoque": 4,
+   "perte": 0.3135,
+   "val_exactitude_equilibree": 85.2
+  },
+  {
+   "epoque": 5,
+   "perte": 0.3536,
+   "val_exactitude_equilibree": 79.6
+  },
+  {
+   "epoque": 6,
+   "perte": 0.3176,
+   "val_exactitude_equilibree": 75.9
+  },
+  {
+   "epoque": 7,
+   "perte": 0.2457,
+   "val_exactitude_equilibree": 89.4
+  },
+  {
+   "epoque": 8,
+   "perte": 0.1875,
+   "val_exactitude_equilibree": 90.8
+  },
+  {
+   "epoque": 9,
+   "perte": 0.1909,
+   "val_exactitude_equilibree": 95.4
+  },
+  {
+   "epoque": 10,
+   "perte": 0.1908,
+   "val_exactitude_equilibree": 95.4
+  },
+  {
+   "epoque": 11,
+   "perte": 0.1561,
+   "val_exactitude_equilibree": 91.7
+  },
+  {
+   "epoque": 12,
+   "perte": 0.165,
+   "val_exactitude_equilibree": 91.7
+  },
+  {
+   "epoque": 13,
+   "perte": 0.1557,
+   "val_exactitude_equilibree": 91.7
+  },
+  {
+   "epoque": 14,
+   "perte": 0.145,
+   "val_exactitude_equilibree": 93.5
+  }
+ ],
+ "jeu": "PSNC / WODR, Zenodo 10.5281/zenodo.15873360, CC-BY-4.0",
+ "reseau": "ResNet18 (ImageNet) affiné",
+ "decoupage": {
+  "train": 635,
+  "val": 137,
+  "test": 137
+ }
+}

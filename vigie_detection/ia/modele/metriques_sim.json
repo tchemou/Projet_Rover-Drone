@@ -1,0 +1,119 @@
+{
+ "zero_tir_sur_sim": {
+  "exactitude": 44.0,
+  "exactitude_equilibree": 58.3,
+  "rappel": {
+   "unaffected": 32.2,
+   "cercospora": 84.3
+  },
+  "precision": {
+   "unaffected": 87.5,
+   "cercospora": 26.7
+  },
+  "f1": {
+   "unaffected": 47.1,
+   "cercospora": 40.6
+  },
+  "matrice_confusion": [
+   [
+    513,
+    1079
+   ],
+   [
+    73,
+    393
+   ]
+  ],
+  "ligne_de_base_toujours_malade": 22.6,
+  "n": 2058
+ },
+ "zero_tir_sur_tous_les_crops_sim": {
+  "exactitude": 43.1,
+  "exactitude_equilibree": 57.8,
+  "rappel": {
+   "unaffected": 31.4,
+   "cercospora": 84.1
+  },
+  "precision": {
+   "unaffected": 87.4,
+   "cercospora": 25.9
+  },
+  "f1": {
+   "unaffected": 46.2,
+   "cercospora": 39.6
+  },
+  "matrice_confusion": [
+   [
+    1737,
+    3791
+   ],
+   [
+    250,
+    1323
+   ]
+  ],
+  "ligne_de_base_toujours_malade": 22.2,
+  "n": 7101
+ },
+ "affine_sur_test_public": {
+  "exactitude": 95.6,
+  "exactitude_equilibree": 94.5,
+  "rappel": {
+   "unaffected": 92.6,
+   "cercospora": 96.4
+  },
+  "precision": {
+   "unaffected": 86.2,
+   "cercospora": 98.1
+  },
+  "f1": {
+   "unaffected": 89.3,
+   "cercospora": 97.2
+  },
+  "matrice_confusion": [
+   [
+    25,
+    2
+   ],
+   [
+    4,
+    106
+   ]
+  ],
+  "ligne_de_base_toujours_malade": 80.3,
+  "n": 137
+ },
+ "affine_sur_plants_sim_ecartes": {
+  "exactitude": 97.6,
+  "exactitude_equilibree": 94.9,
+  "rappel": {
+   "unaffected": 99.8,
+   "cercospora": 89.9
+  },
+  "precision": {
+   "unaffected": 97.1,
+   "cercospora": 99.3
+  },
+  "f1": {
+   "unaffected": 98.5,
+   "cercospora": 94.4
+  },
+  "matrice_confusion": [
+   [
+    1589,
+    3
+   ],
+   [
+    47,
+    419
+   ]
+  ],
+  "ligne_de_base_toujours_malade": 22.6,
+  "n": 2058
+ },
+ "affine_exactitude_par_classe_sim": {
+  "saine": 99.8,
+  "debut": 83.5,
+  "malade": 100.0
+ }
+}
