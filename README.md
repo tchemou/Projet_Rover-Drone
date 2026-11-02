@@ -98,3 +98,4 @@ le trouvent (ou variable `VIGIE_MODELE`). Métriques : `metriques.json` (test pu
 
 Jeu de données : PSNC « Cercospora leaf spot of sugar beet », Zenodo, licence CC-BY-4.0 (non redistribué ici ; `ia/telecharger_jeu.py`
 le télécharge). Le modèle de départ est un ResNet18 pré-entraîné sur ImageNet (torchvision).
+
