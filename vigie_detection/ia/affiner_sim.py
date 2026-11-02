@@ -13,6 +13,7 @@ Classes : 0 = plant sain, 1 = plant atteint (« debut » et « malade » regroup
 Usage : ~/ia/venv/bin/python affiner_sim.py [--sim ~/ia/donnees/sim] [--epoques 8]
 """
 import argparse
+import io
 import json
 import os
 import random
@@ -22,7 +23,7 @@ import sys
 import numpy as np
 import torch
 import torch.nn as nn
-from PIL import Image
+from PIL import Image, ImageFilter
 from torch.utils.data import ConcatDataset, DataLoader, Dataset
 from torchvision import models, transforms
 
@@ -33,6 +34,7 @@ from entrainer import ECART, MOYENNE, Jeu, decouper, evaluer, lister, metriques 
 class JeuSim(Dataset):
     def __init__(self, items, entrainement, taille=224):
         self.items = items
+        self.entrainement = entrainement
         self.cache = [Image.open(p).convert('RGB').resize((taille, taille), Image.BILINEAR) for p, _ in items]
         base = [transforms.RandomHorizontalFlip(), transforms.RandomVerticalFlip(), transforms.RandomApply([transforms.ColorJitter(.12, .12, .08, .01)], p=.5),
                 transforms.RandomAffine(15, translate=(.06, .06), scale=(.9, 1.1))] if entrainement else []
@@ -42,7 +44,14 @@ class JeuSim(Dataset):
         return len(self.items)
 
     def __getitem__(self, i):
-        return self.tf(self.cache[i]), self.items[i][1]
+        img = self.cache[i]
+        if self.entrainement and random.random() < 0.7:           # robustesse : compression JPEG et léger flou aléatoires
+            tampon = io.BytesIO()
+            img.save(tampon, 'JPEG', quality=random.randint(50, 95))
+            img = Image.open(io.BytesIO(tampon.getvalue())).convert('RGB')
+            if random.random() < 0.3:
+                img = img.filter(ImageFilter.GaussianBlur(random.uniform(0.4, 1.4)))
+        return self.tf(img), self.items[i][1]
 
 
 def lister_sim(dossier):

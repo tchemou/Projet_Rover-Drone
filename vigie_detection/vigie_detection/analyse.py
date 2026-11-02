@@ -215,19 +215,37 @@ def centres_vegetation(bgr, m_par_px):
     return out
 
 
-def plants_aerien_ia(bgr, m_par_px, clf, seuil=0.5, cote_m=0.64):
-    """Plants atteints d'une vue du dessus : dict(u, v, classe='malade', score) en pixels."""
+GRILLE_X = [round(-6.0 + 0.4 * k, 3) for k in range(31)]            # plan de plantation : un plant tous les 0,4 m
+GRILLE_Y = [round(-3.0 + 0.6 * k, 3) for k in range(11)]            # 11 rangs espacés de 0,6 m
+FOV_AERIEN = 1.2
+
+
+def plants_aerien_ia(bgr, m_par_px, clf, seuil=0.5, cote_m=0.64, pose=None):
+    """Plants atteints d'une vue du dessus : dict(u, v, classe='malade', score) en pixels.
+
+    Avec la position du drone (`pose` = (x, y) du centre de l'image dans le monde), chaque emplacement du plan de
+    plantation visible est recadré puis classé par le réseau : les recadrages sont toujours centrés sur un plant.
+    Sans position, repli sur la segmentation de la végétation (moins fiable : plants collés, morceaux de plants).
+    """
     h, w = bgr.shape[:2]
-    petit = cv2.resize(bgr, (w // 2, h // 2), interpolation=cv2.INTER_AREA)
-    centres = [(u * 2, v * 2) for u, v in centres_vegetation(petit, m_par_px * 2)]
     r = max(24, int(cote_m / (2 * m_par_px)))
-    recadrages, pos = [], []
-    for u, v in centres:
-        if r <= u < w - r and r <= v < h - r:
-            recadrages.append(bgr[int(v) - r:int(v) + r, int(u) - r:int(u) + r])
-            pos.append((u, v))
+    if pose is not None:
+        px, py = pose
+        pts = []
+        for x in GRILLE_X:
+            v = h / 2 - (x - px) / m_par_px
+            if not (r + 4 <= v < h - r - 4):
+                continue
+            for y in GRILLE_Y:
+                u = w / 2 - (y - py) / m_par_px
+                if r + 4 <= u < w - r - 4:
+                    pts.append((u, v))
+    else:
+        petit = cv2.resize(bgr, (w // 2, h // 2), interpolation=cv2.INTER_AREA)
+        pts = [(u * 2, v * 2) for u, v in centres_vegetation(petit, m_par_px * 2) if r <= u * 2 < w - r and r <= v * 2 < h - r]
+    recadrages = [bgr[int(v) - r:int(v) + r, int(u) - r:int(u) + r] for u, v in pts]
     det = []
-    for (u, v), p in zip(pos, clf.probabilites(recadrages)):
+    for (u, v), p in zip(pts, clf.probabilites(recadrages)):
         if p >= seuil:
-            det.append(dict(u=u, v=v, classe='malade', score=float(p)))
+            det.append(dict(u=float(u), v=float(v), classe='malade', score=float(p)))
     return det

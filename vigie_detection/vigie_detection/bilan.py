@@ -95,33 +95,28 @@ class Bilan(Node):
         if not self.zones or not self.zones.get('plants'):
             return None
         det = self.zones['plants']
-        vus_m, vus_d, fp, err, usés = set(), set(), 0, [], set()
-        for d in det:
-            if d['classe'] == 'malade':
-                p, dist = self.plus_proche(d['x'], d['y'], self.malades)
-                if p:
-                    vus_m.add(p['nom']); err.append(dist)
-                else:
-                    fp += 1
+        vus_m, vus_d, fp, err = set(), set(), 0, []
+        for d in det:                                       # un plant signalé est « bon » s'il est réellement atteint (malade ou début)
+            p, dist = self.plus_proche(d['x'], d['y'], self.malades)
+            if p:
+                vus_m.add(p['nom']); err.append(dist)
+                continue
+            p, dist = self.plus_proche(d['x'], d['y'], self.debuts)
+            if p:
+                vus_d.add(p['nom']); err.append(dist)
             else:
-                p, dist = self.plus_proche(d['x'], d['y'], self.debuts + self.malades)
-                if p and p['classe'] == 'debut':
-                    vus_d.add(p['nom']); err.append(dist)
-                elif p:
-                    vus_m.add(p['nom']); err.append(dist)       # un début d'infection signalé sur un plant malade : repéré quand même
-                else:
-                    fp += 1
+                fp += 1
         tp = len(vus_m)
         fn = len(self.malades) - tp
-        # exactitude sain / malade sur les plants sans ambiguïté (sains et malades)
-        total = len(self.sains) + len(self.malades)
-        bons = len(self.sains) - fp + tp
+        # exactitude sain / atteint sur tous les plants de la parcelle (un début d'infection est un plant atteint)
+        total = len(self.sains) + len(self.malades) + len(self.debuts)
+        bons = (len(self.sains) - fp) + tp + len(vus_d)
         err_cm = sorted(e * 100 for e in err)
         return {'vrais_malades': len(self.malades), 'detectes': tp, 'rates': fn, 'fausses_alertes': fp,
                 'rappel': round(100 * tp / max(1, len(self.malades)), 1),
                 'precision': round(100 * tp / max(1, tp + fp), 1),
                 'exactitude': round(100 * bons / max(1, total), 1),
-                'debuts_total': len(self.debuts), 'debuts_reperes': len(vus_d),
+                'debuts_total': len(self.debuts), 'debuts_reperes': len(vus_d), 'rappel_debuts': round(100 * len(vus_d) / max(1, len(self.debuts)), 1),
                 'erreur_position_cm': round(sum(err_cm) / len(err_cm), 1) if err_cm else None,
                 'erreur_position_p95_cm': round(err_cm[int(0.95 * (len(err_cm) - 1))], 1) if err_cm else None}
 

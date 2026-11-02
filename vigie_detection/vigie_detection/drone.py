@@ -227,7 +227,7 @@ class Drone(Node):
         self.nb_images += 1
         # analyse sur une image réduite de moitié (13 mm par pixel : un plant fait encore 25 pixels)
         if self.clf is not None and self.clf.pret:
-            det = plants_aerien_ia(img, s, self.clf, self.get_parameter('seuil_ia').value)
+            det = plants_aerien_ia(img, s, self.clf, self.get_parameter('seuil_ia').value, pose=(X + DEC_CAM_X, Y))
         else:
             petit = cv2.resize(img, (LARGEUR_PX // 2, HAUTEUR_PX // 2), interpolation=cv2.INTER_AREA)
             det = plants_aerien(petit, s * 2)
