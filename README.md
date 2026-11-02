@@ -1,8 +1,8 @@
 # Vigie Betterave · Rover & Drone agricole
 
-Projet technique HEI4 / ISEN4 Robotique 2026-2027 (JUNIA) : détection et traitement localisé de la
+Projet technique  Robotique 2026-2027 : détection et traitement localisé de la
 cercosporiose de la betterave sucrière par un drone (repérage) et un rover (confirmation, mesure, pulvérisation).
-Ce dépôt contient la **simulation complète** du semestre 7 (ROS 2 Jazzy, Gazebo Harmonic).
+Ce dépôt contient la **simulation complète** (ROS 2 Jazzy, Gazebo Harmonic).
 
 ![Détection dans Gazebo](docs/Capture_Gazebo_detection.png)
 
