@@ -11,6 +11,7 @@ Publications : /drone/cmd_vel            (geometry_msgs/Twist, vers Gazebo)
 """
 import json
 import math
+import os
 from collections import deque
 
 import cv2
@@ -49,6 +50,7 @@ class Drone(Node):
         self.declare_parameter('vues_min', 3)
         self.declare_parameter('ia', True)                     # classification par réseau de neurones (sinon seuillage de couleur)
         self.declare_parameter('seuil_ia', 0.5)
+        self.declare_parameter('journal', os.environ.get('VIGIE_JOURNAL') == '1')               # VIGIE_JOURNAL=1 : enregistre images et poses en vol (diagnostic)
         self.alt = self.get_parameter('altitude').value
         self.vmax = self.get_parameter('vitesse').value
         self.bridge = CvBridge()
@@ -234,6 +236,13 @@ class Drone(Node):
             for d in det:
                 d['u'] *= 2
                 d['v'] *= 2
+        if self.get_parameter('journal').value and self.nb_images % 3 == 0 and self.nb_images < 900:
+            dossier = os.path.expanduser('~/audit/vol')
+            os.makedirs(dossier, exist_ok=True)
+            cv2.imwrite(f'{dossier}/v{self.nb_images:04d}.jpg', img, [cv2.IMWRITE_JPEG_QUALITY, 92])
+            with open(f'{dossier}/poses.jsonl', 'a') as fj:
+                fj.write(json.dumps({'nom': f'v{self.nb_images:04d}', 'x': X, 'y': Y, 'z': Z, 'n_det': len(det),
+                                     'dets': [[round(a['u']), round(a['v']), round(a['score'], 2)] for a in det]}) + chr(10))
         cx, cy = LARGEUR_PX / 2, HAUTEUR_PX / 2
         gardes = []
         for d in det:
