@@ -14,6 +14,26 @@ Ce dépôt contient la **simulation complète** (ROS 2 Jazzy, Gazebo Harmonic).
 | `vigie_detection/` | Nœuds ROS 2 : `drone`, `mission`, `detecteur`, `meteo`, `bilan`, `passerelle` ; console web (`console/`) |
 | `outils/` | Scripts de lancement et de test (voir plus bas) |
 
+## Installation (Ubuntu 24.04, WSL2 ou natif)
+
+Prérequis : ROS 2 Jazzy (paquet `ros-jazzy-desktop`) et Gazebo Harmonic (installé avec `ros-jazzy-ros-gz`).
+
+```bash
+mkdir -p ~/turtlebot3_ws/src && cd ~/turtlebot3_ws/src
+git clone https://github.com/tchemou/Projet_Rover-Drone.git .
+bash outils/installer.sh                      # paquets apt + compilation (colcon)
+mkdir -p ~/ia/modele && cp vigie_detection/ia/modele/modele_cercospora_sim.onnx ~/ia/modele/
+bash outils/lancer_vigie.sh                   # puis ouvrir http://localhost:8420
+```
+
+- Sous Windows, `docs/Lancer_Simulation.bat` fait la dernière étape (WSL2 requis, distribution nommée `Ubuntu`).
+- Au premier lancement, les identifiants initiaux sont créés dans `~/.vigie/identifiants_initiaux.txt` (changement du mot de passe obligatoire).
+  Ils ne sont jamais versionnés.
+- Sans le modèle ONNX, le drone retombe sur la détection par seuillage de couleur.
+- Rendu GPU sous WSL2 : le script positionne `GALLIUM_DRIVER=d3d12` ; adapter `MESA_D3D12_DEFAULT_ADAPTER_NAME` selon la carte.
+- Testé : compilation et démarrage complets depuis une copie propre du code (nœuds, passerelle, décollage du drone).
+  Non testé : `installer.sh` sur une machine vierge.
+
 ## Lancer la simulation
 
 Depuis Windows : double-clic sur `Lancer_Simulation.bat` (copie dans `outils/`). Il ouvre Gazebo puis la console sur
